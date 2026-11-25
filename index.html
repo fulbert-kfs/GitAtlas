@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GitAtlas - Explorateur de profils GitHub &amp; GitLab</title>
+    <meta
+      name="description"
+      content="Entrez un pseudo GitHub ou GitLab : explorez tous ses dépôts publics, leur structure, leur code, leurs README, langages et activité."
+    />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#070b16" />
+    <meta name="color-scheme" content="dark" />
+    <!-- ⚠️ Avant déploiement : remplacer https://example.com par le domaine
+         réel ici ET dans SITE_URL (js/seo.js). Le bloc statique ci-dessous est
+         lu par Facebook, X, WhatsApp & LinkedIn, qui n'exécutent pas le JS. -->
+    <link rel="canonical" href="https://example.com/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="GitAtlas" />
+    <meta property="og:locale" content="fr_FR" />
+    <meta
+      property="og:title"
+      content="GitAtlas - Explorateur de profils GitHub &amp; GitLab"
+    />
+    <meta
+      property="og:description"
+      content="Entrez un pseudo GitHub ou GitLab : explorez tous ses dépôts publics, leur structure, leur code, leurs README, langages et activité."
+    />
+    <meta property="og:url" content="https://example.com/" />
+    <meta
+      property="og:image"
+      content="https://example.com/assets/og-cover.png"
+    />
+    <meta
+      property="og:image:secure_url"
+      content="https://example.com/assets/og-cover.png"
+    />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="GitAtlas - Explorateur de profils GitHub et GitLab"
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="GitAtlas - Explorateur de profils GitHub &amp; GitLab"
+    />
+    <meta
+      name="twitter:description"
+      content="Entrez un pseudo GitHub ou GitLab : explorez tous ses dépôts publics, leur structure, leur code, leurs README, langages et activité."
+    />
+    <meta
+      name="twitter:image"
+      content="https://example.com/assets/og-cover.png"
+    />
+    <meta
+      name="twitter:image:alt"
+      content="GitAtlas - explorateur de profils GitHub et GitLab"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "GitAtlas",
+        "description": "Explorateur de profils GitHub et GitLab : dépôts, arborescence, code source, README, langages et activité.",
+        "url": "https://example.com/",
+        "image": "https://example.com/assets/og-cover.png",
+        "inLanguage": "fr"
+      }
+    </script>
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2032%2032'%3E%3Cdefs%3E%3ClinearGradient%20id='g'%20x1='0'%20y1='0'%20x2='1'%20y2='1'%3E%3Cstop%20offset='0'%20stop-color='%238B7CFF'/%3E%3Cstop%20offset='1'%20stop-color='%2339D0D8'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle%20cx='16'%20cy='16'%20r='13'%20fill='none'%20stroke='url%28%23g%29'%20stroke-width='2.5'/%3E%3Cpath%20d='M10%2013.6v3.8'%20stroke='%238B7CFF'%20stroke-width='2.2'%20stroke-linecap='round'/%3E%3Cpath%20d='M10%2011c6%200%206%202%209.4%202'%20stroke='%2339D0D8'%20stroke-width='2.2'%20fill='none'%20stroke-linecap='round'/%3E%3Ccircle%20cx='10'%20cy='20'%20r='2.6'%20fill='%238B7CFF'/%3E%3Ccircle%20cx='10'%20cy='11'%20r='2.6'%20fill='%2339D0D8'/%3E%3Ccircle%20cx='22'%20cy='13'%20r='2.6'%20fill='%234ADE80'/%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+
+  <body>
+    <noscript>
+      <div
+        style="padding: 100px 24px; text-align: center; font-family: sans-serif"
+      >
+        GitAtlas nécessite JavaScript pour interroger les API GitHub et GitLab.
+      </div>
+    </noscript>
+    <div class="bg" aria-hidden="true">
+      <div class="ab a1"></div>
+      <div class="ab a2"></div>
+      <div class="ab a3"></div>
+      <div class="bg-rings"></div>
+    </div>
+    <header id="hdr">
+      <div
+        class="brand"
+        data-action="brand"
+        role="button"
+        tabindex="0"
+        aria-label="Accueil GitAtlas"
+      >
+        <span class="brand-mark" id="brandMark"></span>
+        <span
+          ><span class="brand-name">Git<em>Atlas</em></span>
+          <div class="brand-sub">GitHub · GitLab Explorer</div>
+        </span>
+      </div>
+      <div class="hdr-sp"></div>
+      <button
+        class="rate-pill"
+        id="ratePill"
+        data-action="open-token"
+        title="État de l'API - cliquez pour configurer un jeton"
+      >
+        <i class="rdot demo" id="rateDot"></i
+        ><span class="lbl" id="rateTxt">Démo</span>
+      </button>
+      <div class="lang-switch" role="group" aria-label="Langue">
+        <button type="button" data-action="set-lang" data-lang="fr" class="on">FR</button>
+        <button type="button" data-action="set-lang" data-lang="en">EN</button>
+      </div>
+      <div class="share-wrap">
+        <button
+          class="hbtn"
+          id="shareBtn"
+          data-action="share-open"
+          aria-haspopup="true"
+          aria-expanded="false"
+          aria-label="Partager GitAtlas"
+        >
+          <span id="shareIco"></span><span class="lbl">Partager</span>
+        </button>
+        <div
+          class="share-menu"
+          id="shareMenu"
+          role="group"
+          aria-label="Partager GitAtlas"
+          hidden
+        ></div>
+      </div>
+      <button class="hbtn" data-action="open-favs" aria-label="Favoris">
+        <span id="favIco"></span><span class="lbl">Favoris</span
+        ><span class="cnt hidden" id="favCount">0</span>
+      </button>
+      <button
+        class="hbtn"
+        id="tokenBtn"
+        data-action="open-token"
+        aria-label="Jeton d'accès GitHub"
+      >
+        <span id="keyIco"></span><span class="lbl">Jeton API</span>
+      </button>
+    </header>
+    <section class="hero" id="hero" aria-label="Recherche GitAtlas">
+      <div class="hero-head">
+        <div class="hero-graph" id="heroGraph" aria-hidden="true"></div>
+        <div class="hero-in">
+          <span class="kicker"><i></i>Explorateur de profils Git</span>
+          <h1 class="h-title">
+            Un pseudo. <span class="grad">Tous ses projets.</span><br />Chaque
+            fichier.
+          </h1>
+          <p class="h-sub">
+            GitHub ou GitLab : explorez les dépôts publics de n'importe quel
+            développeur arborescence, code source, README, langages et
+            activité. Sans compte, sans installation.
+          </p>
+        </div>
+      </div>
+      <form class="search-card" id="searchForm" autocomplete="off">
+        <div class="search-row">
+          <div class="seg" id="platSeg" role="group" aria-label="Plateforme">
+            <button
+              type="button"
+              data-action="platform"
+              data-p="github"
+              id="segGh"
+            ></button>
+            <button
+              type="button"
+              data-action="platform"
+              data-p="gitlab"
+              id="segGl"
+            ></button>
+          </div>
+          <div class="q-wrap" id="qWrap">
+            <span class="at">@</span>
+            <input
+              id="q"
+              type="text"
+              placeholder="torvalds, gaearon, dzaporozhets…"
+              aria-label="Pseudo GitHub ou GitLab"
+              spellcheck="false"
+            />
+          </div>
+          <button type="submit" class="btn btn-pri" id="goBtn">Explorer</button>
+        </div>
+      </form>
+      <div class="chips-row" id="chipsRow"></div>
+      <div class="recent-row" id="recentRow"></div>
+      <div class="hint-row">
+        <span
+          >Astuce : collez aussi une URL de profil, ou tapez « owner/dépôt »
+          pour ouvrir un projet directement.</span
+        >
+        <span><kbd>/</kbd> pour rechercher</span>
+      </div>
+    </section>
+    <main id="stage" aria-live="polite"></main>
+    <footer>
+      <span class="fbrand" id="footBrand"></span>
+      <span
+        >Données : API publiques
+        <a href="https://docs.github.com/rest" target="_blank" rel="noopener"
+          >GitHub</a
+        >
+        &amp;
+        <a href="https://docs.gitlab.com/ee/api/" target="_blank" rel="noopener"
+          >GitLab</a
+        >. Aucune donnée n'est envoyée ailleurs que sur ces API.</span
+      >
+      <span class="sp"></span>
+      <span class="mono" style="font-size: 11px"
+        >fetch() · zéro dépendance · ♥ open source</span
+      >
+    </footer>
+    <div class="scrim" id="dwScrim" data-action="close-favs"></div>
+    <div
+      class="drawer"
+      id="drawer"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Favoris"
+    >
+      <div class="dw-head">
+        <h3><span id="dwStar"></span>Favoris</h3>
+        <button
+          class="btn-icon"
+          data-action="close-favs"
+          aria-label="Fermer"
+          id="dwClose"
+        ></button>
+      </div>
+      <div class="dw-body" id="dwBody"></div>
+    </div>
+    <div
+      class="scrim"
+      id="mdScrim"
+      data-action="close-modal"
+      style="z-index: 94"
+    ></div>
+    <div
+      class="modal"
+      id="tokenModal"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Jeton d'accès à l'API"
+    >
+      <div class="modal-card">
+        <h3><span id="mdKey"></span>Jeton d'accès <span id="mdTitle">GitHub</span></h3>
+        <p id="mdDesc">
+          Ajoutez un jeton personnel pour voir <b>vos dépôts privés</b> et
+          portez la limite de l'API GitHub de 60 à 5 000 requêtes/heure.
+        </p>
+        <div class="md-note">
+          <span id="mdShield"></span
+          ><span
+            >Stocké uniquement dans ce navigateur (sessionStorage). Envoyé
+            exclusivement à <span class="mono" id="mdHost">api.github.com</span>.</span
+          >
+        </div>
+        <input
+          class="inp"
+          id="tokenInput"
+          type="password"
+          placeholder="github_pat_… ou ghp_…"
+          spellcheck="false"
+          aria-label="Jeton d'accès"
+        />
+        <label class="md-check" for="tokMemory">
+          <input type="checkbox" id="tokMemory" />
+          <span id="mdMemory">Ne pas conserver le jeton (effacé au rechargement)</span>
+        </label>
+        <a
+          class="modal-link"
+          id="mdLink"
+          href="https://github.com/settings/tokens?type=beta"
+          target="_blank"
+          rel="noopener"
+          ><span id="mdLinkTxt">Créer un jeton sur GitHub</span>
+          <span id="mdExt"></span
+        ></a>
+        <div class="modal-actions">
+          <button
+            class="btn btn-ghost btn-sm"
+            data-action="clear-token"
+            id="tokClear"
+          >
+            Retirer
+          </button>
+          <button class="btn btn-ghost btn-sm" data-action="close-modal">
+            Annuler
+          </button>
+          <button class="btn btn-pri btn-sm" data-action="save-token">
+            Enregistrer
+          </button>
+        </div>
+        <p class="gl-note" id="mdScopes">
+          GitHub : scope <b>repo</b> (classique) ou <b>Contents: read</b>
+          (jeton affiné). GitLab : jeton personnel avec <b>read_api</b>.
+        </p>
+      </div>
+    </div>
+    <div class="toasts" id="toasts" role="status" aria-live="polite"></div>
+    <!-- Bundle autonome : fonctionne aussi en file:// (aucun import ES au chargement). -->
+    <script src="js/bundle.js"></script>
+  </body>
+</html>

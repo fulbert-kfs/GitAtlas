@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Remplacer l'hôte ci-dessous par le domaine de production.
+Sitemap: https://example.com/sitemap.xml

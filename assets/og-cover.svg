@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="GitAtlas, explorateur de profils GitHub et GitLab">
+  <defs>
+    <linearGradient id="brand" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7b6cff"/>
+      <stop offset="1" stop-color="#2bd4f0"/>
+    </linearGradient>
+    <linearGradient id="rule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7b6cff"/>
+      <stop offset="0.55" stop-color="#ff8a5b"/>
+      <stop offset="1" stop-color="#2bd4f0"/>
+    </linearGradient>
+    <radialGradient id="glowV" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#7b6cff" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#7b6cff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glowC" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#2bd4f0" stop-opacity="0.16"/>
+      <stop offset="1" stop-color="#2bd4f0" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#070b16"/>
+  <circle cx="930" cy="300" r="360" fill="url(#glowV)"/>
+  <circle cx="760" cy="470" r="300" fill="url(#glowC)"/>
+
+  <g fill="none" stroke-width="1.6">
+    <circle cx="900" cy="315" r="110" stroke="#7b6cff" stroke-opacity="0.42"/>
+    <circle cx="900" cy="315" r="180" stroke="#7b6cff" stroke-opacity="0.3"/>
+    <circle cx="900" cy="315" r="250" stroke="#2bd4f0" stroke-opacity="0.22"/>
+    <circle cx="900" cy="315" r="320" stroke="#2bd4f0" stroke-opacity="0.14"/>
+  </g>
+
+  <g stroke="#a6b1d8" stroke-opacity="0.28" stroke-width="1.4">
+    <line x1="790" y1="315" x2="900" y2="205"/>
+    <line x1="900" y1="205" x2="1010" y2="315"/>
+    <line x1="1010" y1="315" x2="900" y2="425"/>
+    <line x1="900" y1="425" x2="790" y2="315"/>
+    <line x1="900" y1="205" x2="900" y2="425"/>
+    <line x1="790" y1="315" x2="1010" y2="315"/>
+    <line x1="1010" y1="315" x2="1080" y2="205"/>
+    <line x1="900" y1="425" x2="1030" y2="470"/>
+  </g>
+
+  <g>
+    <circle cx="900" cy="205" r="7" fill="#7b6cff"/>
+    <circle cx="1010" cy="315" r="6" fill="#2bd4f0"/>
+    <circle cx="790" cy="315" r="5" fill="#e8edfb" opacity="0.9"/>
+    <circle cx="900" cy="425" r="8" fill="#4ade80" opacity="0.9"/>
+    <circle cx="1080" cy="205" r="5" fill="#7b6cff" opacity="0.85"/>
+    <circle cx="1030" cy="470" r="4" fill="#2bd4f0" opacity="0.8"/>
+  </g>
+
+  <g font-family="Arial, Helvetica, sans-serif">
+    <text x="92" y="326" font-size="106" font-weight="700" letter-spacing="-3" fill="#e8edfb">Git<tspan fill="url(#brand)">A</tspan>tlas</text>
+    <text x="94" y="388" font-size="31" font-weight="400" letter-spacing="0.2" fill="#a6b1d8">Explore GitHub &amp; GitLab profiles</text>
+  </g>
+  <rect x="94" y="424" width="132" height="4" rx="2" fill="url(#rule)"/>
+</svg>

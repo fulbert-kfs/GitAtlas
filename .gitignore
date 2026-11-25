@@ -1,0 +1,25 @@
+# Dépendances et outils locaux
+node_modules/
+.npm/
+
+# Secrets et environnement
+.env
+.env.*
+!.env.example
+*.pem
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Éditeurs et système
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+
+# Note : js/bundle.js est versionné volontairement,
+# car index.html le charge directement (aucune étape de build au déploiement).
