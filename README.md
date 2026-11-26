@@ -187,7 +187,7 @@ gitscope/
 
 Le dépôt contient un `netlify.toml` : la racine est publiée directement, sans commande de build. Importez `fulbert-kfs/GitAtlas` dans Netlify et lancez le déploiement ; les en-têtes de sécurité du fichier de configuration sont appliqués automatiquement. Le routage par fragment (`#/...`) ne nécessite aucune réécriture d'URL.
 
-La politique `Content-Security-Policy` n'autorise pas les scripts inline : le badge « Powered by Netlify » injecté par la plateforme sur les projets gratuits ne peut donc pas s'afficher, sans abonnement payant. Les appels aux API GitHub/GitLab et les images distantes restent autorisés. Si vous désactivez cette politique, le badge réapparaîtra.
+La politique `Content-Security-Policy` n'autorise que le script `js/bundle.js` portant le nonce `Z2l0QXRsYXM=`. Le script HUD injecté par Netlify pour le badge « Powered by Netlify » n'a pas ce nonce et est bloqué, sans abonnement payant. Les appels aux API GitHub/GitLab et les images distantes restent autorisés. Si vous désactivez cette politique ou retirez le nonce du script, le badge réapparaîtra.
 
 ## Modifier le projet
 
