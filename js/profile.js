@@ -157,7 +157,13 @@ export function renderProfile() {
     favBtn("profile", pl, p.login) +
     '<button class="btn btn-ghost btn-sm" data-action="export-profile">' +
     icon("download", 14) +
-    "Exporter JSON</button></div></div></section>" +
+    "Exporter JSON</button>" +
+    '<button class="btn btn-ghost btn-sm" data-action="export-csv" aria-label="Exporter les dépôts filtrés en CSV">' +
+    icon("download", 14) +
+    "CSV</button>" +
+    '<button class="btn btn-ghost btn-sm" data-action="export-md" aria-label="Exporter les dépôts filtrés en Markdown">' +
+    icon("download", 14) +
+    "Markdown</button></div></div></section>" +
     '<section class="stats-row">' +
     statTile("s-gold", "star", totalStars, "étoiles cumulées") +
     statTile("s-vio", "fork", totalForks, "forks cumulés") +

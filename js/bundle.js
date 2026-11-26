@@ -514,15 +514,15 @@
   // js/components.js
   var platIcon = (pl, s = 13) => pl === "gitlab" ? icon("gitlab", s) : pl === "demo" ? icon("sparkle", s) : icon("github", s);
   var platName = (pl) => pl === "gitlab" ? "GitLab" : pl === "demo" ? "D\xE9mo" : "GitHub";
-  function favKey(kind, pl, id) {
-    return kind + ":" + pl + ":" + id;
+  function favKey(kind2, pl, id) {
+    return kind2 + ":" + pl + ":" + id;
   }
   function isFav(key) {
     return S.favs.some((f) => f.key === key);
   }
-  function favBtn(kind, pl, id, extra) {
-    const key = favKey(kind, pl, id);
-    return '<button class="fav-btn' + (isFav(key) ? " on" : "") + '" data-action="fav-' + kind + '" data-pl="' + esc(pl) + '" data-id="' + esc(id) + '" data-favkey="' + esc(key) + '" aria-label="Ajouter aux favoris" title="Favori" ' + (extra || "") + ">" + icon("star", 15) + "</button>";
+  function favBtn(kind2, pl, id, extra) {
+    const key = favKey(kind2, pl, id);
+    return '<button class="fav-btn' + (isFav(key) ? " on" : "") + '" data-action="fav-' + kind2 + '" data-pl="' + esc(pl) + '" data-id="' + esc(id) + '" data-favkey="' + esc(key) + '" aria-label="Ajouter aux favoris" title="Favori" ' + (extra || "") + ">" + icon("star", 15) + "</button>";
   }
   function gitLoader() {
     return '<svg class="gitloader" width="52" height="16" viewBox="0 0 52 16"><line x1="4" y1="8" x2="48" y2="8" stroke="#31427A" stroke-width="2"/><circle class="gl-dot" cx="10" cy="8" r="4" fill="#7B6CFF"/><circle class="gl-dot" cx="26" cy="8" r="4" fill="#FF6B3D"/><circle class="gl-dot" cx="42" cy="8" r="4" fill="#2BD4F0"/></svg>';
@@ -777,19 +777,19 @@
     });
     if ($("drawer").classList.contains("open")) renderFavDrawer();
   }
-  function toggleFav(kind, pl, id) {
-    const key = favKey(kind, pl, id);
+  function toggleFav(kind2, pl, id) {
+    const key = favKey(kind2, pl, id);
     const idx = S.favs.findIndex((f) => f.key === key);
     if (idx >= 0) {
       S.favs.splice(idx, 1);
       toast("info", "Retir\xE9 des favoris.");
     } else {
       let item;
-      if (kind === "profile") {
+      if (kind2 === "profile") {
         const p = S.prof && S.prof.pl === pl && S.prof.login === id ? S.prof.profile : null;
         item = {
           key,
-          kind,
+          kind: kind2,
           pl,
           id,
           name: p ? p.name : id,
@@ -802,7 +802,7 @@
           m = S.prof.repos.find((x) => x.full === id && x.pl === pl);
         item = {
           key,
-          kind,
+          kind: kind2,
           pl,
           id,
           name: m ? m.name : id.split("/").pop(),
@@ -914,6 +914,8 @@
     Fictif: "Fictional",
     "Voir sur ": "View on ",
     "Exporter JSON": "Export JSON",
+    "Exporter les d\xE9p\xF4ts filtr\xE9s en CSV": "Export filtered repositories as CSV",
+    "Exporter les d\xE9p\xF4ts filtr\xE9s en Markdown": "Export filtered repositories as Markdown",
     "\xE9toiles cumul\xE9es": "total stars",
     "forks cumul\xE9s": "total forks",
     "d\xE9p\xF4ts (dont priv\xE9s)": "repositories (incl. private)",
@@ -1056,6 +1058,12 @@
     "Export JSON t\xE9l\xE9charg\xE9.": "JSON export downloaded.",
     "Export JSON annul\xE9.": "JSON export cancelled.",
     "Export JSON lanc\xE9\u2026": "Starting JSON export\u2026",
+    "Export CSV t\xE9l\xE9charg\xE9.": "CSV export downloaded.",
+    "Export CSV annul\xE9.": "CSV export cancelled.",
+    "Export CSV lanc\xE9\u2026": "Starting CSV export\u2026",
+    "Export Markdown t\xE9l\xE9charg\xE9.": "Markdown export downloaded.",
+    "Export Markdown annul\xE9.": "Markdown export cancelled.",
+    "Export Markdown lanc\xE9\u2026": "Starting Markdown export\u2026",
     "T\xE9l\xE9chargement annul\xE9 : ": "Download cancelled: ",
     "T\xE9l\xE9chargement du README annul\xE9.": "README download cancelled.",
     "Lien GitAtlas copi\xE9 dans le presse-papiers.": "GitAtlas link copied to clipboard.",
@@ -5107,57 +5115,6 @@
     if (S.lastFocus) S.lastFocus.focus();
   }
 
-  // js/tree.js
-  function buildTree(entries) {
-    const root = { name: "", path: "", type: "tree", children: [], count: 0 };
-    const map = /* @__PURE__ */ new Map([["", root]]);
-    function ensureDir(path) {
-      if (map.has(path)) return map.get(path);
-      const idx = path.lastIndexOf("/");
-      const parent = ensureDir(idx < 0 ? "" : path.slice(0, idx));
-      const node = {
-        name: path.slice(idx + 1),
-        path,
-        type: "tree",
-        children: [],
-        count: 0
-      };
-      parent.children.push(node);
-      map.set(path, node);
-      return node;
-    }
-    for (const e of entries) {
-      const idx = e.path.lastIndexOf("/");
-      const parent = ensureDir(idx < 0 ? "" : e.path.slice(0, idx));
-      if (e.type === "tree") ensureDir(e.path);
-      else {
-        const node = {
-          name: e.path.slice(idx + 1),
-          path: e.path,
-          type: e.type === "commit" ? "commit" : "blob",
-          size: e.size || 0,
-          children: null,
-          count: 0
-        };
-        parent.children.push(node);
-        map.set(e.path, node);
-      }
-    }
-    (function fin(n) {
-      if (n.type !== "tree") return;
-      n.children.sort(
-        (a, b) => (a.type === "tree" ? 0 : 1) - (b.type === "tree" ? 0 : 1) || a.name.localeCompare(b.name, "fr")
-      );
-      let c = 0;
-      for (const ch of n.children) {
-        fin(ch);
-        c += ch.type === "tree" ? ch.count : 1;
-      }
-      n.count = c;
-    })(root);
-    return { root, map };
-  }
-
   // js/charts.js
   function donutHTML(repos) {
     const counts = {};
@@ -5225,132 +5182,55 @@
     ).join("") + '</div><p class="chart-foot">' + icon("clock", 13) + "Dernier push " + relTime(last.pushed || last.updated) + "</p>";
   }
 
-  // js/profile.js
-  function heroMode() {
-    const h = $("hero");
-    h.classList.toggle("micro", S.view === "repo");
-    h.classList.toggle("compact", S.view === "profile" && S.userNav);
-  }
-  function renderProfile() {
-    const { pl, login, profile: p, repos } = S.prof;
-    S.errCtx = null;
-    stopRateTimer();
-    updateRatePill(pl);
-    const totalStars = repos.reduce((a, r) => a + (r.stars || 0), 0);
-    const totalForks = repos.reduce((a, r) => a + (r.forks || 0), 0);
-    const f4 = p.followers != null ? { v: p.followers, l: "abonn\xE9s", ic: "users", cls: "s-green" } : {
-      v: null,
-      l: "derni\xE8re activit\xE9",
-      ic: "clock",
-      cls: "s-green",
-      txt: repos.length ? relTime(repos[0].pushed) : "-"
-    };
-    const meta = [];
-    if (p.company)
-      meta.push(
-        '<span class="mchip">' + icon("building", 13) + esc(p.company) + "</span>"
-      );
-    if (p.location)
-      meta.push(
-        '<span class="mchip">' + icon("pin", 13) + esc(p.location) + "</span>"
-      );
-    if (p.blog)
-      meta.push(
-        '<span class="mchip">' + icon("link", 13) + '<a href="' + esc(/^https?:/.test(p.blog) ? p.blog : "https://" + p.blog) + '" target="_blank" rel="noopener noreferrer">' + esc(p.blog.replace(/^https?:\/\//, "")) + "</a></span>"
-      );
-    if (p.twitter)
-      meta.push(
-        '<span class="mchip">' + icon("globe", 13) + "@" + esc(p.twitter) + "</span>"
-      );
-    if (p.created)
-      meta.push(
-        '<span class="mchip">' + icon("calendar", 13) + "inscrit\xB7e en " + monthYear(p.created) + "</span>"
-      );
-    const langs = [...new Set(repos.map((r) => r.lang).filter(Boolean))].sort(
-      (a, b) => repos.filter((r) => r.lang === b).length - repos.filter((r) => r.lang === a).length
-    );
-    const banner = pl === "demo" ? '<div class="demo-banner reveal in">' + icon("sparkle", 16) + '<span><b>Mode d\xE9monstration</b> : profil fictif, donn\xE9es locales hors-ligne. Entrez un pseudo r\xE9el ci-dessus pour interroger l\u2019API en direct.</span><span class="sp"></span><button class="btn btn-warm btn-sm" data-action="focus-search">Chercher un vrai profil ' + icon("ext", 13) + "</button></div>" : "";
-    const statTile = (cls, ic, val, label, txt) => '<div class="stat ' + cls + ' reveal"><div class="stat-ic">' + icon(ic, 20) + '</div><div><div class="stat-num"' + (txt ? "" : ' data-count="' + val + '"') + ">" + (txt || "0") + '</div><div class="stat-label">' + label + "</div></div></div>";
-    $("stage").innerHTML = '<div class="wrap">' + banner + '<section class="pcard reveal"><div class="pmain"><div class="avatar-ring"><img class="pavatar" src="' + esc(p.avatar || initialsAvatar(p.name)) + '" alt="Avatar de ' + esc(p.name) + '"></div><div class="pinfo"><div class="pname-row"><h2 class="pname">' + esc(p.name) + "</h2>" + (p.org ? '<span class="badge b-pub">Organisation</span>' : "") + (pl === "demo" ? '<span class="badge b-arch">Fictif</span>' : "") + '</div><div class="plogin"><span class="plat-badge ' + pl + '">' + platIcon(pl, 11) + platName(pl) + "</span>@" + esc(p.login) + "</div>" + (p.bio ? '<p class="pbio">' + esc(p.bio) + "</p>" : "") + '<div class="pmeta">' + meta.join("") + '</div></div></div><div class="pside"><div class="pfollow">' + (p.followers != null ? '<div><b data-count="' + p.followers + '">0</b><span>abonn\xE9s</span></div>' : "") + (p.following != null ? '<div><b data-count="' + p.following + '">0</b><span>abonnements</span></div>' : "") + '</div><div class="pactions">' + (p.url ? '<a class="btn btn-ghost btn-sm" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer">' + platIcon(pl, 14) + "Voir sur " + platName(pl) + icon("ext", 12) + "</a>" : "") + favBtn("profile", pl, p.login) + '<button class="btn btn-ghost btn-sm" data-action="export-profile">' + icon("download", 14) + 'Exporter JSON</button></div></div></section><section class="stats-row">' + statTile("s-gold", "star", totalStars, "\xE9toiles cumul\xE9es") + statTile("s-vio", "fork", totalForks, "forks cumul\xE9s") + statTile(
-      "s-cyan",
-      "box",
-      p.publicRepos != null ? p.publicRepos : repos.length,
-      p.own ? "d\xE9p\xF4ts (dont priv\xE9s)" : "d\xE9p\xF4ts publics"
-    ) + statTile(f4.cls, f4.ic, f4.v, f4.l, f4.txt) + '</section><section class="charts-row"><div class="chart-card reveal" style="--d:60ms"><h3 class="chart-title">' + icon("code", 13) + "Langages (par d\xE9p\xF4t)</h3>" + donutHTML(repos) + '</div><div class="chart-card reveal" style="--d:120ms"><h3 class="chart-title">' + icon("star", 13) + "D\xE9p\xF4ts les plus \xE9toil\xE9s</h3>" + barsHTML(repos) + '</div><div class="chart-card reveal" style="--d:180ms"><h3 class="chart-title">' + icon("chart", 13) + "Activit\xE9 \xB7 pushs par an</h3>" + histHTML(repos) + '</div></section><div class="toolbar" id="toolbar"><div class="tsearch">' + icon("search", 14) + '<input id="repoFilter" placeholder="Filtrer les d\xE9p\xF4ts\u2026" value="' + esc(S.filters.q) + '" aria-label="Filtrer les d\xE9p\xF4ts"></div><select class="sel" id="langSel" aria-label="Filtrer par langage"><option value="all">Tous les langages</option>' + langs.map(
-      (l) => '<option value="' + esc(l) + '"' + (S.filters.lang === l ? " selected" : "") + ">" + esc(l) + " (" + repos.filter((r) => r.lang === l).length + ")</option>"
-    ).join("") + '</select><select class="sel" id="sortSel" aria-label="Trier"><option value="stars"' + (S.filters.sort === "stars" ? " selected" : "") + '>\xC9toiles \u2193</option><option value="recent"' + (S.filters.sort === "recent" ? " selected" : "") + '>Activit\xE9 r\xE9cente</option><option value="name"' + (S.filters.sort === "name" ? " selected" : "") + '>Nom A\u2192Z</option><option value="created"' + (S.filters.sort === "created" ? " selected" : "") + '>Cr\xE9\xE9s r\xE9cemment</option></select><div class="seg seg-sm" id="typeSeg">' + [
-      ["all", "Tous"],
-      ["source", "Sources"],
-      ["fork", "Forks"],
-      ["arch", "Archiv\xE9s"]
-    ].map(
-      ([t, l]) => '<button data-action="ftype" data-t="' + t + '" class="' + (S.filters.type === t ? "on" : "") + '">' + l + "</button>"
-    ).join("") + '</div><span class="rcount"><b id="repoCount">' + repos.length + '</b> d\xE9p\xF4ts</span><div class="seg seg-sm"><button data-action="layout" data-l="grid" class="' + (S.filters.layout === "grid" ? "on" : "") + '" aria-label="Vue grille">' + icon("grid", 14) + '</button><button data-action="layout" data-l="list" class="' + (S.filters.layout === "list" ? "on" : "") + '" aria-label="Vue liste">' + icon("list", 14) + '</button></div></div><div id="repoArea"></div><div id="moreArea"></div></div>';
-    renderRepos();
-    postRender();
-  }
-  function filteredRepos() {
-    const { repos } = S.prof;
-    const f = S.filters;
-    let out = repos.filter((r) => {
-      if (f.type === "source" && r.fork) return false;
-      if (f.type === "fork" && !r.fork) return false;
-      if (f.type === "arch" && !r.archived) return false;
-      if (f.lang !== "all" && r.lang !== f.lang) return false;
-      if (f.q) {
-        const q = f.q.toLowerCase();
-        if (!(r.name.toLowerCase().includes(q) || (r.desc || "").toLowerCase().includes(q) || (r.topics || []).join(" ").toLowerCase().includes(q)))
-          return false;
+  // js/tree.js
+  function buildTree(entries) {
+    const root = { name: "", path: "", type: "tree", children: [], count: 0 };
+    const map = /* @__PURE__ */ new Map([["", root]]);
+    function ensureDir(path) {
+      if (map.has(path)) return map.get(path);
+      const idx = path.lastIndexOf("/");
+      const parent = ensureDir(idx < 0 ? "" : path.slice(0, idx));
+      const node = {
+        name: path.slice(idx + 1),
+        path,
+        type: "tree",
+        children: [],
+        count: 0
+      };
+      parent.children.push(node);
+      map.set(path, node);
+      return node;
+    }
+    for (const e of entries) {
+      const idx = e.path.lastIndexOf("/");
+      const parent = ensureDir(idx < 0 ? "" : e.path.slice(0, idx));
+      if (e.type === "tree") ensureDir(e.path);
+      else {
+        const node = {
+          name: e.path.slice(idx + 1),
+          path: e.path,
+          type: e.type === "commit" ? "commit" : "blob",
+          size: e.size || 0,
+          children: null,
+          count: 0
+        };
+        parent.children.push(node);
+        map.set(e.path, node);
       }
-      return true;
-    });
-    const by = {
-      stars: (a, b) => b.stars - a.stars || a.name.localeCompare(b.name),
-      recent: (a, b) => new Date(b.pushed || 0) - new Date(a.pushed || 0),
-      name: (a, b) => a.name.localeCompare(b.name, "fr"),
-      created: (a, b) => new Date(b.created || 0) - new Date(a.created || 0)
-    };
-    out.sort(by[f.sort] || by.stars);
-    return out;
-  }
-  function repoCardHTML(r, i) {
-    const lc = langColor(r.lang);
-    const badges = (r.private ? '<span class="badge b-priv">' + icon("lock", 10) + "Priv\xE9</span>" : "") + (r.fork ? '<span class="badge b-fork">' + icon("fork", 10) + "Fork</span>" : "") + (r.archived ? '<span class="badge b-arch">' + icon("archive", 10) + "Archiv\xE9</span>" : "");
-    const topics = (r.topics || []).slice(0, 3).map((t) => '<span class="tchip">' + esc(t) + "</span>").join("") + ((r.topics || []).length > 3 ? '<span class="tchip">+' + (r.topics.length - 3) + "</span>" : "");
-    return '<article class="rcard reveal" style="--lc:' + lc + ";--d:" + Math.min(i, 10) * 45 + 'ms" data-action="go-repo" data-pl="' + esc(r.pl) + '" data-full="' + esc(r.full) + '"><div class="rc-top"><span class="rc-lang"><i class="dot"></i>' + esc(r.lang || "-") + '</span><div class="rc-badges">' + badges + "</div>" + favBtn("repo", r.pl, r.full) + '</div><h4 class="rc-name"><button type="button" class="name-open" data-action="go-repo" data-pl="' + esc(r.pl) + '" data-full="' + esc(r.full) + '" aria-label="Ouvrir ' + esc(r.name) + '">' + icon("book", 15) + "<span>" + esc(r.name) + '</span></button></h4><p class="rc-desc">' + esc(r.desc || "Pas de description.") + "</p>" + (topics ? '<div class="rc-topics">' + topics + "</div>" : "") + '<div class="rc-foot"><span class="rc-stat st">' + icon("star", 12) + fmtNum(r.stars) + '</span><span class="rc-stat">' + icon("fork", 12) + fmtNum(r.forks) + "</span>" + (r.issues != null ? '<span class="rc-stat">' + icon("alert", 12) + fmtNum(r.issues) + "</span>" : "") + '<span class="rc-upd">maj ' + relTime(r.pushed || r.updated) + "</span></div></article>";
-  }
-  function repoRowHTML(r, i) {
-    const lc = langColor(r.lang);
-    return '<article class="rrow reveal" style="--lc:' + lc + ";--d:" + Math.min(i, 12) * 30 + 'ms" data-action="go-repo" data-pl="' + esc(r.pl) + '" data-full="' + esc(r.full) + '"><div class="rr-main"><button type="button" class="rr-name name-open" data-action="go-repo" data-pl="' + esc(r.pl) + '" data-full="' + esc(r.full) + '"><span>' + esc(r.name) + "</span>" + (r.archived ? '<span class="badge b-arch">Archiv\xE9</span>' : "") + (r.fork ? '<span class="badge b-fork">Fork</span>' : "") + '</button><span class="rr-desc">' + esc(r.desc || "") + '</span></div><span class="rr-lang"><i class="dot"></i><span>' + esc(r.lang || "-") + '</span></span><span class="rr-num st">' + icon("star", 12) + fmtNum(r.stars) + '</span><span class="rr-num rr-forks">' + icon("fork", 12) + fmtNum(r.forks) + '</span><span class="rr-upd">' + relTime(r.pushed || r.updated) + "</span>" + favBtn("repo", r.pl, r.full) + "</article>";
-  }
-  function renderRepos() {
-    const area = $("repoArea"), more = $("moreArea");
-    if (!area) return;
-    const list = filteredRepos();
-    const total = S.prof.repos.length;
-    const cnt = $("repoCount");
-    if (cnt)
-      cnt.textContent = list.length === total ? total : list.length + " / " + total;
-    if (!total) {
-      area.innerHTML = '<div class="empty-mini">' + icon("inbox", 36) + "<span>Ce profil ne poss\xE8de aucun d\xE9p\xF4t public pour le moment.</span></div>";
-      more.innerHTML = "";
-      return;
     }
-    if (!list.length) {
-      area.innerHTML = '<div class="empty-mini">' + icon("search", 36) + '<span>Aucun d\xE9p\xF4t ne correspond \xE0 ces filtres.</span><button class="btn btn-ghost btn-sm" data-action="reset-filters">' + icon("refresh", 13) + "R\xE9initialiser les filtres</button></div>";
-      more.innerHTML = "";
-      return;
-    }
-    const shown = list.slice(0, S.batch);
-    area.innerHTML = S.filters.layout === "grid" ? '<div class="rgrid">' + shown.map(repoCardHTML).join("") + "</div>" : '<div class="rlist">' + shown.map(repoRowHTML).join("") + "</div>";
-    more.innerHTML = list.length > S.batch ? '<div class="more-wrap"><button class="btn btn-ghost" data-action="load-more-repos">' + icon("chevd", 14) + "Afficher 24 de plus (" + (list.length - S.batch) + " restants)</button></div>" : list.length > 10 ? '<div class="end-note">' + icon("check", 13) + "Tous les d\xE9p\xF4ts sont affich\xE9s</div>" : "";
-    observeReveals(area);
-    observeReveals(more);
-  }
-  function saveFilters() {
-    const key = S.prof.pl + ":" + S.prof.login;
-    const c = S.profCache.get(key);
-    if (c) c.filters = { ...S.filters };
+    (function fin(n) {
+      if (n.type !== "tree") return;
+      n.children.sort(
+        (a, b) => (a.type === "tree" ? 0 : 1) - (b.type === "tree" ? 0 : 1) || a.name.localeCompare(b.name, "fr")
+      );
+      let c = 0;
+      for (const ch of n.children) {
+        fin(ch);
+        c += ch.type === "tree" ? ch.count : 1;
+      }
+      n.count = c;
+    })(root);
+    return { root, map };
   }
 
   // js/flows.js
@@ -5581,6 +5461,216 @@
     }
     history.replaceState(null, "", "#/u/demo/lina-forge");
     profileFlow("demo", "lina-forge");
+  }
+
+  // js/profile.js
+  function heroMode() {
+    const h = $("hero");
+    h.classList.toggle("micro", S.view === "repo");
+    h.classList.toggle("compact", S.view === "profile" && S.userNav);
+  }
+  function renderProfile() {
+    const { pl, login, profile: p, repos } = S.prof;
+    S.errCtx = null;
+    stopRateTimer();
+    updateRatePill(pl);
+    const totalStars = repos.reduce((a, r) => a + (r.stars || 0), 0);
+    const totalForks = repos.reduce((a, r) => a + (r.forks || 0), 0);
+    const f4 = p.followers != null ? { v: p.followers, l: "abonn\xE9s", ic: "users", cls: "s-green" } : {
+      v: null,
+      l: "derni\xE8re activit\xE9",
+      ic: "clock",
+      cls: "s-green",
+      txt: repos.length ? relTime(repos[0].pushed) : "-"
+    };
+    const meta = [];
+    if (p.company)
+      meta.push(
+        '<span class="mchip">' + icon("building", 13) + esc(p.company) + "</span>"
+      );
+    if (p.location)
+      meta.push(
+        '<span class="mchip">' + icon("pin", 13) + esc(p.location) + "</span>"
+      );
+    if (p.blog)
+      meta.push(
+        '<span class="mchip">' + icon("link", 13) + '<a href="' + esc(/^https?:/.test(p.blog) ? p.blog : "https://" + p.blog) + '" target="_blank" rel="noopener noreferrer">' + esc(p.blog.replace(/^https?:\/\//, "")) + "</a></span>"
+      );
+    if (p.twitter)
+      meta.push(
+        '<span class="mchip">' + icon("globe", 13) + "@" + esc(p.twitter) + "</span>"
+      );
+    if (p.created)
+      meta.push(
+        '<span class="mchip">' + icon("calendar", 13) + "inscrit\xB7e en " + monthYear(p.created) + "</span>"
+      );
+    const langs = [...new Set(repos.map((r) => r.lang).filter(Boolean))].sort(
+      (a, b) => repos.filter((r) => r.lang === b).length - repos.filter((r) => r.lang === a).length
+    );
+    const banner = pl === "demo" ? '<div class="demo-banner reveal in">' + icon("sparkle", 16) + '<span><b>Mode d\xE9monstration</b> : profil fictif, donn\xE9es locales hors-ligne. Entrez un pseudo r\xE9el ci-dessus pour interroger l\u2019API en direct.</span><span class="sp"></span><button class="btn btn-warm btn-sm" data-action="focus-search">Chercher un vrai profil ' + icon("ext", 13) + "</button></div>" : "";
+    const statTile = (cls, ic, val, label, txt) => '<div class="stat ' + cls + ' reveal"><div class="stat-ic">' + icon(ic, 20) + '</div><div><div class="stat-num"' + (txt ? "" : ' data-count="' + val + '"') + ">" + (txt || "0") + '</div><div class="stat-label">' + label + "</div></div></div>";
+    $("stage").innerHTML = '<div class="wrap">' + banner + '<section class="pcard reveal"><div class="pmain"><div class="avatar-ring"><img class="pavatar" src="' + esc(p.avatar || initialsAvatar(p.name)) + '" alt="Avatar de ' + esc(p.name) + '"></div><div class="pinfo"><div class="pname-row"><h2 class="pname">' + esc(p.name) + "</h2>" + (p.org ? '<span class="badge b-pub">Organisation</span>' : "") + (pl === "demo" ? '<span class="badge b-arch">Fictif</span>' : "") + '</div><div class="plogin"><span class="plat-badge ' + pl + '">' + platIcon(pl, 11) + platName(pl) + "</span>@" + esc(p.login) + "</div>" + (p.bio ? '<p class="pbio">' + esc(p.bio) + "</p>" : "") + '<div class="pmeta">' + meta.join("") + '</div></div></div><div class="pside"><div class="pfollow">' + (p.followers != null ? '<div><b data-count="' + p.followers + '">0</b><span>abonn\xE9s</span></div>' : "") + (p.following != null ? '<div><b data-count="' + p.following + '">0</b><span>abonnements</span></div>' : "") + '</div><div class="pactions">' + (p.url ? '<a class="btn btn-ghost btn-sm" href="' + esc(p.url) + '" target="_blank" rel="noopener noreferrer">' + platIcon(pl, 14) + "Voir sur " + platName(pl) + icon("ext", 12) + "</a>" : "") + favBtn("profile", pl, p.login) + '<button class="btn btn-ghost btn-sm" data-action="export-profile">' + icon("download", 14) + 'Exporter JSON</button><button class="btn btn-ghost btn-sm" data-action="export-csv" aria-label="Exporter les d\xE9p\xF4ts filtr\xE9s en CSV">' + icon("download", 14) + 'CSV</button><button class="btn btn-ghost btn-sm" data-action="export-md" aria-label="Exporter les d\xE9p\xF4ts filtr\xE9s en Markdown">' + icon("download", 14) + 'Markdown</button></div></div></section><section class="stats-row">' + statTile("s-gold", "star", totalStars, "\xE9toiles cumul\xE9es") + statTile("s-vio", "fork", totalForks, "forks cumul\xE9s") + statTile(
+      "s-cyan",
+      "box",
+      p.publicRepos != null ? p.publicRepos : repos.length,
+      p.own ? "d\xE9p\xF4ts (dont priv\xE9s)" : "d\xE9p\xF4ts publics"
+    ) + statTile(f4.cls, f4.ic, f4.v, f4.l, f4.txt) + '</section><section class="charts-row"><div class="chart-card reveal" style="--d:60ms"><h3 class="chart-title">' + icon("code", 13) + "Langages (par d\xE9p\xF4t)</h3>" + donutHTML(repos) + '</div><div class="chart-card reveal" style="--d:120ms"><h3 class="chart-title">' + icon("star", 13) + "D\xE9p\xF4ts les plus \xE9toil\xE9s</h3>" + barsHTML(repos) + '</div><div class="chart-card reveal" style="--d:180ms"><h3 class="chart-title">' + icon("chart", 13) + "Activit\xE9 \xB7 pushs par an</h3>" + histHTML(repos) + '</div></section><div class="toolbar" id="toolbar"><div class="tsearch">' + icon("search", 14) + '<input id="repoFilter" placeholder="Filtrer les d\xE9p\xF4ts\u2026" value="' + esc(S.filters.q) + '" aria-label="Filtrer les d\xE9p\xF4ts"></div><select class="sel" id="langSel" aria-label="Filtrer par langage"><option value="all">Tous les langages</option>' + langs.map(
+      (l) => '<option value="' + esc(l) + '"' + (S.filters.lang === l ? " selected" : "") + ">" + esc(l) + " (" + repos.filter((r) => r.lang === l).length + ")</option>"
+    ).join("") + '</select><select class="sel" id="sortSel" aria-label="Trier"><option value="stars"' + (S.filters.sort === "stars" ? " selected" : "") + '>\xC9toiles \u2193</option><option value="recent"' + (S.filters.sort === "recent" ? " selected" : "") + '>Activit\xE9 r\xE9cente</option><option value="name"' + (S.filters.sort === "name" ? " selected" : "") + '>Nom A\u2192Z</option><option value="created"' + (S.filters.sort === "created" ? " selected" : "") + '>Cr\xE9\xE9s r\xE9cemment</option></select><div class="seg seg-sm" id="typeSeg">' + [
+      ["all", "Tous"],
+      ["source", "Sources"],
+      ["fork", "Forks"],
+      ["arch", "Archiv\xE9s"]
+    ].map(
+      ([t, l]) => '<button data-action="ftype" data-t="' + t + '" class="' + (S.filters.type === t ? "on" : "") + '">' + l + "</button>"
+    ).join("") + '</div><span class="rcount"><b id="repoCount">' + repos.length + '</b> d\xE9p\xF4ts</span><div class="seg seg-sm"><button data-action="layout" data-l="grid" class="' + (S.filters.layout === "grid" ? "on" : "") + '" aria-label="Vue grille">' + icon("grid", 14) + '</button><button data-action="layout" data-l="list" class="' + (S.filters.layout === "list" ? "on" : "") + '" aria-label="Vue liste">' + icon("list", 14) + '</button></div></div><div id="repoArea"></div><div id="moreArea"></div></div>';
+    renderRepos();
+    postRender();
+  }
+  function filteredRepos() {
+    const { repos } = S.prof;
+    const f = S.filters;
+    let out = repos.filter((r) => {
+      if (f.type === "source" && r.fork) return false;
+      if (f.type === "fork" && !r.fork) return false;
+      if (f.type === "arch" && !r.archived) return false;
+      if (f.lang !== "all" && r.lang !== f.lang) return false;
+      if (f.q) {
+        const q = f.q.toLowerCase();
+        if (!(r.name.toLowerCase().includes(q) || (r.desc || "").toLowerCase().includes(q) || (r.topics || []).join(" ").toLowerCase().includes(q)))
+          return false;
+      }
+      return true;
+    });
+    const by = {
+      stars: (a, b) => b.stars - a.stars || a.name.localeCompare(b.name),
+      recent: (a, b) => new Date(b.pushed || 0) - new Date(a.pushed || 0),
+      name: (a, b) => a.name.localeCompare(b.name, "fr"),
+      created: (a, b) => new Date(b.created || 0) - new Date(a.created || 0)
+    };
+    out.sort(by[f.sort] || by.stars);
+    return out;
+  }
+  function repoCardHTML(r, i) {
+    const lc = langColor(r.lang);
+    const badges = (r.private ? '<span class="badge b-priv">' + icon("lock", 10) + "Priv\xE9</span>" : "") + (r.fork ? '<span class="badge b-fork">' + icon("fork", 10) + "Fork</span>" : "") + (r.archived ? '<span class="badge b-arch">' + icon("archive", 10) + "Archiv\xE9</span>" : "");
+    const topics = (r.topics || []).slice(0, 3).map((t) => '<span class="tchip">' + esc(t) + "</span>").join("") + ((r.topics || []).length > 3 ? '<span class="tchip">+' + (r.topics.length - 3) + "</span>" : "");
+    return '<article class="rcard reveal" style="--lc:' + lc + ";--d:" + Math.min(i, 10) * 45 + 'ms" data-action="go-repo" data-pl="' + esc(r.pl) + '" data-full="' + esc(r.full) + '"><div class="rc-top"><span class="rc-lang"><i class="dot"></i>' + esc(r.lang || "-") + '</span><div class="rc-badges">' + badges + "</div>" + favBtn("repo", r.pl, r.full) + '</div><h4 class="rc-name"><button type="button" class="name-open" data-action="go-repo" data-pl="' + esc(r.pl) + '" data-full="' + esc(r.full) + '" aria-label="Ouvrir ' + esc(r.name) + '">' + icon("book", 15) + "<span>" + esc(r.name) + '</span></button></h4><p class="rc-desc">' + esc(r.desc || "Pas de description.") + "</p>" + (topics ? '<div class="rc-topics">' + topics + "</div>" : "") + '<div class="rc-foot"><span class="rc-stat st">' + icon("star", 12) + fmtNum(r.stars) + '</span><span class="rc-stat">' + icon("fork", 12) + fmtNum(r.forks) + "</span>" + (r.issues != null ? '<span class="rc-stat">' + icon("alert", 12) + fmtNum(r.issues) + "</span>" : "") + '<span class="rc-upd">maj ' + relTime(r.pushed || r.updated) + "</span></div></article>";
+  }
+  function repoRowHTML(r, i) {
+    const lc = langColor(r.lang);
+    return '<article class="rrow reveal" style="--lc:' + lc + ";--d:" + Math.min(i, 12) * 30 + 'ms" data-action="go-repo" data-pl="' + esc(r.pl) + '" data-full="' + esc(r.full) + '"><div class="rr-main"><button type="button" class="rr-name name-open" data-action="go-repo" data-pl="' + esc(r.pl) + '" data-full="' + esc(r.full) + '"><span>' + esc(r.name) + "</span>" + (r.archived ? '<span class="badge b-arch">Archiv\xE9</span>' : "") + (r.fork ? '<span class="badge b-fork">Fork</span>' : "") + '</button><span class="rr-desc">' + esc(r.desc || "") + '</span></div><span class="rr-lang"><i class="dot"></i><span>' + esc(r.lang || "-") + '</span></span><span class="rr-num st">' + icon("star", 12) + fmtNum(r.stars) + '</span><span class="rr-num rr-forks">' + icon("fork", 12) + fmtNum(r.forks) + '</span><span class="rr-upd">' + relTime(r.pushed || r.updated) + "</span>" + favBtn("repo", r.pl, r.full) + "</article>";
+  }
+  function renderRepos() {
+    const area = $("repoArea"), more = $("moreArea");
+    if (!area) return;
+    const list = filteredRepos();
+    const total = S.prof.repos.length;
+    const cnt = $("repoCount");
+    if (cnt)
+      cnt.textContent = list.length === total ? total : list.length + " / " + total;
+    if (!total) {
+      area.innerHTML = '<div class="empty-mini">' + icon("inbox", 36) + "<span>Ce profil ne poss\xE8de aucun d\xE9p\xF4t public pour le moment.</span></div>";
+      more.innerHTML = "";
+      return;
+    }
+    if (!list.length) {
+      area.innerHTML = '<div class="empty-mini">' + icon("search", 36) + '<span>Aucun d\xE9p\xF4t ne correspond \xE0 ces filtres.</span><button class="btn btn-ghost btn-sm" data-action="reset-filters">' + icon("refresh", 13) + "R\xE9initialiser les filtres</button></div>";
+      more.innerHTML = "";
+      return;
+    }
+    const shown = list.slice(0, S.batch);
+    area.innerHTML = S.filters.layout === "grid" ? '<div class="rgrid">' + shown.map(repoCardHTML).join("") + "</div>" : '<div class="rlist">' + shown.map(repoRowHTML).join("") + "</div>";
+    more.innerHTML = list.length > S.batch ? '<div class="more-wrap"><button class="btn btn-ghost" data-action="load-more-repos">' + icon("chevd", 14) + "Afficher 24 de plus (" + (list.length - S.batch) + " restants)</button></div>" : list.length > 10 ? '<div class="end-note">' + icon("check", 13) + "Tous les d\xE9p\xF4ts sont affich\xE9s</div>" : "";
+    observeReveals(area);
+    observeReveals(more);
+  }
+  function saveFilters() {
+    const key = S.prof.pl + ":" + S.prof.login;
+    const c = S.profCache.get(key);
+    if (c) c.filters = { ...S.filters };
+  }
+
+  // js/exporters.js
+  function stamp() {
+    return (/* @__PURE__ */ new Date()).toISOString().slice(0, 10);
+  }
+  function date(v) {
+    return v ? String(v).slice(0, 10) : "";
+  }
+  function csvCell(v) {
+    return '"' + String(v ?? "").replace(/"/g, '""') + '"';
+  }
+  function mdCell(v) {
+    return String(v ?? "").replace(/\r?\n/g, " ").replace(/\|/g, "\\|");
+  }
+  function kind(r) {
+    return r.fork ? "Fork" : r.archived ? "Archiv\xE9" : "Source";
+  }
+  function csvText(repos) {
+    const head = [
+      "Nom",
+      "D\xE9p\xF4t",
+      "Plateforme",
+      "Description",
+      "Langage",
+      "\xC9toiles",
+      "Forks",
+      "Issues",
+      "Topics",
+      "Type",
+      "Visibilit\xE9",
+      "Cr\xE9\xE9 le",
+      "Mis \xE0 jour le",
+      "URL"
+    ];
+    const rows = repos.map((r) => [
+      r.name,
+      r.full,
+      r.pl === "demo" ? "D\xE9mo" : r.pl,
+      r.desc,
+      r.lang || "",
+      r.stars,
+      r.forks,
+      r.issues ?? "",
+      (r.topics || []).join(", "),
+      kind(r),
+      r.private ? "Priv\xE9" : "Public",
+      date(r.created),
+      date(r.updated),
+      r.url
+    ]);
+    return "\uFEFF" + [head, ...rows].map((row) => row.map(csvCell).join(";")).join("\r\n") + "\r\n";
+  }
+  function markdownText(profile, repos) {
+    const who = profile.name ? profile.name + " (@" + profile.login + ")" : "@" + profile.login;
+    const lines = [
+      "# D\xE9p\xF4ts de " + who + " \u2014 GitAtlas",
+      "",
+      "G\xE9n\xE9r\xE9 le " + (/* @__PURE__ */ new Date()).toLocaleDateString("fr-FR") + " \xB7 " + repos.length + " d\xE9p\xF4ts \xB7 plateforme " + (profile.pl === "demo" ? "D\xE9mo" : profile.pl),
+      "",
+      "| D\xE9p\xF4t | Description | Langage | \xC9toiles | Forks | Mis \xE0 jour |",
+      "| --- | --- | --- | ---: | ---: | --- |"
+    ];
+    for (const r of repos) {
+      lines.push(
+        "| [" + mdCell(r.full) + "](" + r.url + ") | " + mdCell(r.desc) + " | " + mdCell(r.lang || "\u2014") + " | " + r.stars + " | " + r.forks + " | " + date(r.updated) + " |"
+      );
+    }
+    return lines.join("\n") + "\n";
+  }
+  function repoExport(format, repos) {
+    const p = S.prof;
+    const base = "gitatlas-" + p.login + "-repos-" + stamp();
+    return format === "csv" ? {
+      name: base + ".csv",
+      blob: new Blob([csvText(repos)], { type: "text/csv;charset=utf-8" })
+    } : {
+      name: base + ".md",
+      blob: new Blob([markdownText(p, repos)], {
+        type: "text/markdown;charset=utf-8"
+      })
+    };
   }
 
   // js/search.js
@@ -5823,6 +5913,24 @@
           result === "cancelled" ? "info" : "success",
           result === "cancelled" ? "Export JSON annul\xE9." : result === "fallback" ? "Export JSON lanc\xE9\u2026" : "Export JSON t\xE9l\xE9charg\xE9."
         );
+        break;
+      }
+      case "export-csv":
+      case "export-md": {
+        if (!S.prof) break;
+        const format = el.dataset.action === "export-csv" ? "csv" : "md";
+        const { name, blob } = repoExport(format, filteredRepos());
+        const result = await saveBlob(name, blob);
+        const messages = format === "csv" ? {
+          saved: "Export CSV t\xE9l\xE9charg\xE9.",
+          cancelled: "Export CSV annul\xE9.",
+          fallback: "Export CSV lanc\xE9\u2026"
+        } : {
+          saved: "Export Markdown t\xE9l\xE9charg\xE9.",
+          cancelled: "Export Markdown annul\xE9.",
+          fallback: "Export Markdown lanc\xE9\u2026"
+        };
+        toast(result === "cancelled" ? "info" : "success", messages[result]);
         break;
       }
       case "share-repo":

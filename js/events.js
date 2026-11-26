@@ -16,6 +16,8 @@ import { closeModal } from "./modal.js";
 import { copyText } from "./utils.js";
 import { defaultFilters } from "./state.js";
 import { fileBlob } from "./api.js";
+import { filteredRepos } from "./profile.js";
+import { repoExport } from "./exporters.js";
 import { resetAuthCaches } from "./state.js";
 import { setToken } from "./state.js";
 import { dismissToast } from "./ui.js";
@@ -242,6 +244,27 @@ document.addEventListener("click", async (e) => {
             ? "Export JSON lancé…"
             : "Export JSON téléchargé.",
       );
+      break;
+    }
+    case "export-csv":
+    case "export-md": {
+      if (!S.prof) break;
+      const format = el.dataset.action === "export-csv" ? "csv" : "md";
+      const { name, blob } = repoExport(format, filteredRepos());
+      const result = await saveBlob(name, blob);
+      const messages =
+        format === "csv"
+          ? {
+              saved: "Export CSV téléchargé.",
+              cancelled: "Export CSV annulé.",
+              fallback: "Export CSV lancé…",
+            }
+          : {
+              saved: "Export Markdown téléchargé.",
+              cancelled: "Export Markdown annulé.",
+              fallback: "Export Markdown lancé…",
+            };
+      toast(result === "cancelled" ? "info" : "success", messages[result]);
       break;
     }
     case "share-repo":

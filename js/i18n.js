@@ -64,6 +64,10 @@ const DICT = {
   Fictif: "Fictional",
   "Voir sur ": "View on ",
   "Exporter JSON": "Export JSON",
+  "Exporter les dépôts filtrés en CSV":
+    "Export filtered repositories as CSV",
+  "Exporter les dépôts filtrés en Markdown":
+    "Export filtered repositories as Markdown",
   "étoiles cumulées": "total stars",
   "forks cumulés": "total forks",
   "dépôts (dont privés)": "repositories (incl. private)",
@@ -224,6 +228,12 @@ const DICT = {
   "Export JSON téléchargé.": "JSON export downloaded.",
   "Export JSON annulé.": "JSON export cancelled.",
   "Export JSON lancé…": "Starting JSON export…",
+  "Export CSV téléchargé.": "CSV export downloaded.",
+  "Export CSV annulé.": "CSV export cancelled.",
+  "Export CSV lancé…": "Starting CSV export…",
+  "Export Markdown téléchargé.": "Markdown export downloaded.",
+  "Export Markdown annulé.": "Markdown export cancelled.",
+  "Export Markdown lancé…": "Starting Markdown export…",
   "Téléchargement annulé : ": "Download cancelled: ",
   "Téléchargement du README annulé.": "README download cancelled.",
   "Lien GitAtlas copié dans le presse-papiers.":
