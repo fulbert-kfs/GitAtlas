@@ -337,6 +337,29 @@ header.scrolled {
   flex: 1;
 }
 
+/* Le bouton hamburger n'apparaît que sur mobile ; sur desktop, les actions
+   restent alignées dans l'en-tête sans changement de balisage. */
+.menu-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  justify-content: center;
+}
+
+.hdr-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+@keyframes menuIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+}
+
 .rate-pill {
   display: flex;
   align-items: center;
@@ -3363,6 +3386,12 @@ main {
   pointer-events: auto;
 }
 
+/* Voile du menu mobile : sous l'en-tête (50) et son panneau (51). */
+.menu-scrim {
+  display: none;
+  z-index: 49;
+}
+
 .drawer {
   position: fixed;
   top: 0;
@@ -3892,6 +3921,58 @@ footer a:hover {
   header {
     gap: 8px;
     padding-inline: 12px;
+  }
+
+  /* Le panneau réutilise les contrôles de l'en-tête : ils gardent leurs IDs,
+     leurs data-action et leurs traductions, mais passent en liste verticale. */
+  .menu-toggle {
+    display: flex;
+  }
+
+  .hdr-actions {
+    position: fixed;
+    top: var(--hdr);
+    right: 10px;
+    left: 10px;
+    z-index: 51;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 6px;
+    padding: 12px;
+    background: rgba(11, 17, 34, 0.98);
+    border: 1px solid var(--line2);
+    border-radius: var(--r);
+    box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.9);
+    animation: menuIn 0.16s ease-out;
+  }
+
+  header.menu-open .hdr-actions {
+    display: flex;
+  }
+
+  .menu-scrim.show {
+    display: block;
+  }
+
+  .hdr-actions .rate-pill,
+  .hdr-actions .hbtn {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 10px 14px;
+  }
+
+  .hdr-actions .hbtn .lbl,
+  .hdr-actions .rate-pill .lbl {
+    display: inline;
+  }
+
+  .hdr-actions .lang-switch {
+    justify-content: center;
+  }
+
+  .hdr-actions .lang-switch button {
+    flex: 1;
   }
 
   .hbtn,

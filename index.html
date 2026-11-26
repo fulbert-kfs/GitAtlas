@@ -113,50 +113,70 @@
       </div>
       <div class="hdr-sp"></div>
       <button
-        class="rate-pill"
-        id="ratePill"
-        data-action="open-token"
-        title="État de l'API - cliquez pour configurer un jeton"
+        class="hbtn menu-toggle"
+        id="menuBtn"
+        data-action="menu-toggle"
+        aria-label="Menu"
+        aria-controls="hdrActions"
+        aria-expanded="false"
       >
-        <i class="rdot demo" id="rateDot"></i
-        ><span class="lbl" id="rateTxt">Démo</span>
+        <span id="menuIco"></span>
       </button>
-      <div class="lang-switch" role="group" aria-label="Langue">
-        <button type="button" data-action="set-lang" data-lang="fr" class="on">FR</button>
-        <button type="button" data-action="set-lang" data-lang="en">EN</button>
-      </div>
-      <div class="share-wrap">
+      <!-- Ces contrôles restent dans l'en-tête sur desktop et deviennent le
+           panneau du menu hamburger sur mobile : un seul jeu d'IDs et de handlers. -->
+      <div class="hdr-actions" id="hdrActions">
+        <button
+          class="rate-pill"
+          id="ratePill"
+          data-action="open-token"
+          title="État de l'API - cliquez pour configurer un jeton"
+        >
+          <i class="rdot demo" id="rateDot"></i
+          ><span class="lbl" id="rateTxt">Démo</span>
+        </button>
+        <div class="lang-switch" role="group" aria-label="Langue">
+          <button type="button" data-action="set-lang" data-lang="fr" class="on">FR</button>
+          <button type="button" data-action="set-lang" data-lang="en">EN</button>
+        </div>
+        <div class="share-wrap">
+          <button
+            class="hbtn"
+            id="shareBtn"
+            data-action="share-open"
+            aria-haspopup="true"
+            aria-expanded="false"
+            aria-label="Partager GitAtlas"
+          >
+            <span id="shareIco"></span><span class="lbl">Partager</span>
+          </button>
+          <div
+            class="share-menu"
+            id="shareMenu"
+            role="group"
+            aria-label="Partager GitAtlas"
+            hidden
+          ></div>
+        </div>
+        <button class="hbtn" data-action="open-favs" aria-label="Favoris">
+          <span id="favIco"></span><span class="lbl">Favoris</span
+          ><span class="cnt hidden" id="favCount">0</span>
+        </button>
         <button
           class="hbtn"
-          id="shareBtn"
-          data-action="share-open"
-          aria-haspopup="true"
-          aria-expanded="false"
-          aria-label="Partager GitAtlas"
+          id="tokenBtn"
+          data-action="open-token"
+          aria-label="Jeton d'accès GitHub"
         >
-          <span id="shareIco"></span><span class="lbl">Partager</span>
+          <span id="keyIco"></span><span class="lbl">Jeton API</span>
         </button>
-        <div
-          class="share-menu"
-          id="shareMenu"
-          role="group"
-          aria-label="Partager GitAtlas"
-          hidden
-        ></div>
       </div>
-      <button class="hbtn" data-action="open-favs" aria-label="Favoris">
-        <span id="favIco"></span><span class="lbl">Favoris</span
-        ><span class="cnt hidden" id="favCount">0</span>
-      </button>
-      <button
-        class="hbtn"
-        id="tokenBtn"
-        data-action="open-token"
-        aria-label="Jeton d'accès GitHub"
-      >
-        <span id="keyIco"></span><span class="lbl">Jeton API</span>
-      </button>
     </header>
+    <div
+      class="scrim menu-scrim"
+      id="menuScrim"
+      data-action="menu-close"
+      aria-hidden="true"
+    ></div>
     <section class="hero" id="hero" aria-label="Recherche GitAtlas">
       <div class="hero-head">
         <div class="hero-graph" id="heroGraph" aria-hidden="true"></div>
