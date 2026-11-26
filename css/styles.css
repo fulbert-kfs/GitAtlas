@@ -587,7 +587,8 @@ header .menu-toggle {
 }
 
 .share-item[data-action="share-copy"],
-.share-item[data-action="share-native"] {
+.share-item[data-action="share-native"],
+.share-item[data-action="share-png"] {
   grid-column: 1 / -1;
 }
 
@@ -611,6 +612,7 @@ header .menu-toggle {
 [data-share-icon="telegram"] { color: #43c7f0; }
 [data-share-icon="mail"] { color: var(--orange); }
 [data-share-icon="link"] { color: var(--cyan); }
+[data-share-icon="png"] { color: var(--cyan); }
 [data-share-icon="native"] { color: var(--vio2); }
 
 @keyframes pop {

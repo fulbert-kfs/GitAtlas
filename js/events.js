@@ -1,6 +1,7 @@
 // ÉVÉNEMENTS
 import { $ } from "./utils.js";
 import { closeShare } from "./share.js";
+import { sharePng } from "./card.js";
 import { copyShare } from "./share.js";
 import { isShareOpen } from "./share.js";
 import { nativeShare } from "./share.js";
@@ -282,6 +283,10 @@ document.addEventListener("click", async (e) => {
     case "share-copy":
       closeShare();
       await copyShare();
+      break;
+    case "share-png":
+      closeShare();
+      await sharePng();
       break;
     case "share-native":
       closeShare();

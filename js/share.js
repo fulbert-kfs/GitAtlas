@@ -17,6 +17,7 @@ const ICONS = {
   linkedin: "linkedin",
   telegram: "telegram",
   mail: "mail",
+  png: "image",
   link: "link",
 };
 

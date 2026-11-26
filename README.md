@@ -41,7 +41,8 @@ Node.js et `npx` ne servent qu'à régénérer le bundle après une modification
 - **Jeton API** par plateforme pour accéder aux dépôts privés.
 - **Bascule FR / EN** : seuls les textes de l'interface sont traduits, pas les contenus distants.
 - **Partage** : Facebook, X, WhatsApp, LinkedIn, Telegram, e-mail, copie du lien et partage natif du navigateur.
-- **Export** : fichiers, README et archive du dépôt, avec un message explicite si le téléchargement est annulé.
+- **Export** : fichiers, README et archive du dépôt, avec un message explicite si le téléchargement est annulé ; liste des dépôts filtrés en CSV ou Markdown depuis la vue profil ;
+- **Carte de partage** : génération d'un PNG 1200 × 630 du profil ou du dépôt courant, directement dans le navigateur, depuis le menu de partage.
 
 ## Mode démo et API réelle
 

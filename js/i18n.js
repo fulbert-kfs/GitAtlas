@@ -117,9 +117,11 @@ const DICT = {
   "Partager sur les réseaux": "Share on social networks",
   "Partage natif": "Native share",
   "Copier le lien": "Copy link",
+  "Carte PNG": "PNG card",
   Fichiers: "Files",
   Langages: "Languages",
   Commits: "Commits",
+  "Chemin du fichier": "File path",
   "Arborescence · ": "Tree · ",
   " fichiers": " files",
   EXPLORATEUR: "EXPLORER",
@@ -238,6 +240,12 @@ const DICT = {
   "Téléchargement du README annulé.": "README download cancelled.",
   "Lien GitAtlas copié dans le presse-papiers.":
     "GitAtlas link copied to clipboard.",
+  "Carte PNG téléchargée.": "PNG card downloaded.",
+  "Carte PNG annulée.": "PNG card cancelled.",
+  "Carte PNG lancée…": "Starting PNG card…",
+  "Carte PNG indisponible.": "PNG card unavailable.",
+  "Ouvrez d'abord un profil ou un dépôt.":
+    "Open a profile or repository first.",
   "Copie impossible": "Copy failed",
   "Le ZIP est disponible sur les dépôts réels (pas en démo).":
     "ZIP is available for real repositories (not in demo).",

@@ -166,6 +166,11 @@ export function shareTargets() {
         encodeURIComponent(text + "\n" + url),
     },
     {
+      key: "png",
+      label: "Carte PNG",
+      action: "share-png",
+    },
+    {
       key: "link",
       label: "Copier le lien",
       action: "share-copy",

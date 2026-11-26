@@ -459,7 +459,7 @@ export function applyTreeSel() {
 }
 export function viewerBarHTML(title, metaTxt, actions) {
   return (
-    '<div class="pane-bar"><span class="pb-path">' +
+    '<div class="pane-bar"><span class="pb-path" tabindex="0" aria-label="Chemin du fichier">' +
     title +
     '</span><span class="pb-meta">' +
     metaTxt +
