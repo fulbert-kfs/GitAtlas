@@ -76,6 +76,7 @@ L'interface est conçue pour fonctionner du desktop au petit écran :
 - aucune barre de défilement horizontale de 320 à 430 px de large ;
 - sur mobile (≤ 720 px), les actions de l'en-tête (état de l'API, langues, partage, favoris, jeton) sont regroupées dans un menu hamburger : zone de clic transparente, `aria-expanded`, focus clavier, fermeture par Échap et retour automatique au bouton lors d'une navigation ;
 - sur mobile, la carte profil garde l'avatar à côté de l'identité (64 à 76 px) et étire ses actions en bas avec des cibles de 44 px ;
+- en vue liste mobile, chaque dépôt passe sur deux rangs (nom/étoiles/favori puis langage/forks/date) au lieu de colonnes trop étroites ;
 - sur mobile, la barre des dépôts se réorganise en grille (recherche, langage/tri, types, compte/vue) dans l'ordre du balisage, avec des cibles tactiles de 44 px ;
 - cibles tactiles d'au moins 44 × 44 px, effets de survol réservés aux pointeurs fins et retour au `:active` sur appui ;
 - navigation clavier, focus visible, zones défilantes accessibles au clavier, annonces des notifications via une région live ;

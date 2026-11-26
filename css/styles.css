@@ -4096,6 +4096,56 @@ footer a:hover {
     height: 44px;
   }
 
+  /* Vue liste : les colonnes fixes desktop ne laissaient que ~125 px au nom
+     sur un téléphone. Chaque ligne passe sur deux rangs : nom et étoiles en
+     haut, puis langage, forks et date sur toute la largeur. */
+  .rrow {
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-areas:
+      "main star fav"
+      "lang forks upd";
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .rrow .rr-main {
+    grid-area: main;
+  }
+
+  .rrow .rr-desc {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-height: 1.4;
+  }
+
+  .rrow .rr-num.st {
+    grid-area: star;
+    justify-self: end;
+  }
+
+  .rrow .rr-forks {
+    grid-area: forks;
+    display: flex;
+  }
+
+  .rrow .rr-upd {
+    grid-area: upd;
+    display: block;
+  }
+
+  .rrow .rr-lang {
+    grid-area: lang;
+  }
+
+  .rrow > .fav-btn {
+    grid-area: fav;
+    justify-self: end;
+    width: 44px;
+    height: 44px;
+  }
+
   /* La barre filtre passe en grille dans l'ordre du balisage : recherche en
      pleine largeur, langage/tri en vis-à-vis, types sur une ligne, puis le
      compte et le sélecteur de vue. Le focus clavier suit donc le même ordre. */
@@ -4226,6 +4276,12 @@ footer a:hover {
 
   .plogin {
     font-size: 12px;
+  }
+
+  /* Sous 380 px, la date élargit la dernière colonne et rogne le nom des
+     dépôts ; elle disparaît au profit du langage et des forks. */
+  .rrow .rr-upd {
+    display: none;
   }
 
   .rate-pill {
