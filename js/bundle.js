@@ -5050,9 +5050,16 @@
   }
 
   // js/modal.js
+  var blockWheel2 = (e) => {
+    if (e.target instanceof Element && e.target.closest(".drawer.open, .modal.open")) return;
+    e.preventDefault();
+  };
   function lockBody(on) {
     S.lockCount = Math.max(0, S.lockCount + (on ? 1 : -1));
-    document.body.classList.toggle("lock", S.lockCount > 0);
+    const locked = S.lockCount > 0;
+    document.body.classList.toggle("lock", locked);
+    if (locked) window.addEventListener("wheel", blockWheel2, { passive: false });
+    else window.removeEventListener("wheel", blockWheel2);
   }
   function openDrawer() {
     S.lastFocus = document.activeElement;

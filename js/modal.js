@@ -7,9 +7,21 @@ import { tokenPersisted } from "./state.js";
 import { renderFavDrawer } from "./ui.js";
 
 /* ============================== MODALE / TIROIR ============================== */
+/* La fenêtre défile via <html> (le `overflow-x` est porté par la racine pour
+   garder une gouttière stable). `body.lock` seul ne suffit donc pas : on bloque
+   aussi la molette, sauf dans le tiroir ou la modale qui ont leur propre zone
+   défilante. */
+const blockWheel = (e) => {
+  if (e.target instanceof Element && e.target.closest(".drawer.open, .modal.open")) return;
+  e.preventDefault();
+};
+
 export function lockBody(on) {
   S.lockCount = Math.max(0, S.lockCount + (on ? 1 : -1));
-  document.body.classList.toggle("lock", S.lockCount > 0);
+  const locked = S.lockCount > 0;
+  document.body.classList.toggle("lock", locked);
+  if (locked) window.addEventListener("wheel", blockWheel, { passive: false });
+  else window.removeEventListener("wheel", blockWheel);
 }
 export function openDrawer() {
   S.lastFocus = document.activeElement;

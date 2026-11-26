@@ -44,6 +44,11 @@ html {
   scroll-behavior: smooth;
   /* Le focus clavier ne doit jamais passer sous l'en-tête ou les onglets. */
   scroll-padding-top: calc(var(--hdr) + 60px);
+  /* Le débordement décoratif est coupé au niveau de la fenêtre, pas du body :
+     ainsi `body.lock` ne peut plus retirer la barre verticale et décaler toute
+     la page de sa largeur à l'ouverture d'un tiroir ou d'une modale. */
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
 }
 
 body {
@@ -53,7 +58,6 @@ body {
   font-size: 15px;
   line-height: 1.55;
   min-height: 100vh;
-  overflow-x: hidden;
 }
 
 body.lock {
@@ -830,6 +834,21 @@ header .menu-toggle {
   color: var(--vio2);
   background: rgba(123, 108, 255, 0.16);
   box-shadow: inset 0 0 0 1px rgba(123, 108, 255, 0.5);
+}
+
+/* Les deux boutons de vue ne portent qu'une icône : ils ne doivent pas
+   hériter du padding horizontal des boutons à libellé du sélecteur de type. */
+.toolbar > .seg:last-child button {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+}
+
+.toolbar > .seg:last-child .ic {
+  width: 16px;
+  height: 16px;
 }
 
 .q-wrap {
@@ -3386,6 +3405,9 @@ main {
 .scrim.show {
   opacity: 1;
   pointer-events: auto;
+  /* Bloque le défilement tactile de la page derrière le voile, sans toucher
+     à la largeur de la fenêtre. Le tiroir et la modale restent défilables. */
+  touch-action: none;
 }
 
 /* Voile du menu mobile : sous l'en-tête (50) et son panneau (51). */
@@ -4183,6 +4205,8 @@ footer a:hover {
   }
 
   .toolbar > .seg:last-child button {
+    width: 44px;
+    height: 44px;
     min-height: 44px;
   }
 
