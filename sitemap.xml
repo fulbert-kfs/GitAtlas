@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Remplacer https://example.com par le domaine de production. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://example.com/</loc>
+    <loc>https://gitatlas.netlify.app/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

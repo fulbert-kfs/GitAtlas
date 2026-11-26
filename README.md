@@ -93,12 +93,14 @@ Les vues testées avec axe-core 4.12.1 (accueil, profil, dépôt, menu de partag
 
 Le routage utilise un fragment `#/…` : les crawlers ne voient qu'une URL côté serveur. `sitemap.xml` ne référence donc que la racine, volontairement, puisque les profils et dépôts sont générés côté client. Les réseaux sociaux ne lisent pas le fragment ni le JavaScript : les balises statiques du `<head>` restent la source de leurs aperçus.
 
-**Avant la mise en ligne**, remplacer `https://example.com` aux quatre endroits suivants :
+Le domaine de production est configuré sur `https://gitatlas.netlify.app` dans quatre endroits synchronisés :
 
 1. `SITE_URL` dans `js/seo.js`, utilisé à l'exécution ;
 2. le bloc statique du `<head>` de `index.html` (canonical, OG, Twitter et JSON-LD) ;
 3. `sitemap.xml` ;
 4. `robots.txt` (URL du sitemap).
+
+Si le nom Netlify change, mettre à jour ces quatre emplacements puis régénérer `js/bundle.js`.
 
 Après une modification du visuel source, régénérer le PNG avec un navigateur pour conserver le rendu exact des dégradés de texte :
 
@@ -212,6 +214,6 @@ Deux points à connaître :
 | --- | --- | --- |
 | Message « Limite API atteinte » | Quota des API publiques épuisé | Patienter jusqu'au rétablissement ou ajouter un jeton |
 | Dépôts privés absents | Aucun jeton, ou pseudo différent du compte du jeton | Vérifier le jeton et le pseudo dans la modale |
-| Métadonnées avec `example.com` | Domaine de production non configuré | Appliquer les quatre remplacements indiqués plus haut |
+| Métadonnées avec l'ancien domaine | Nom Netlify modifié depuis la configuration | Mettre à jour les quatre emplacements puis régénérer le bundle |
 | Téléchargement annulé signalé | Sélecteur de fichier natif fermé par l'utilisateur | Recommencer et confirmer l'enregistrement |
 | Modification JS invisible | Bundle non régénéré | Relancer la commande `esbuild` ci-dessus |
