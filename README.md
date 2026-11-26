@@ -93,7 +93,7 @@ Les vues testées avec axe-core 4.12.1 (accueil, profil, dépôt, menu de partag
 
 Le routage utilise un fragment `#/…` : les crawlers ne voient qu'une URL côté serveur. `sitemap.xml` ne référence donc que la racine, volontairement, puisque les profils et dépôts sont générés côté client. Les réseaux sociaux ne lisent pas le fragment ni le JavaScript : les balises statiques du `<head>` restent la source de leurs aperçus.
 
-Le domaine de production est configuré sur `https://gitatlas.netlify.app` dans quatre endroits synchronisés :
+Le domaine de production est configuré sur `https://gitatlas-explorer.netlify.app` dans quatre endroits synchronisés :
 
 1. `SITE_URL` dans `js/seo.js`, utilisé à l'exécution ;
 2. le bloc statique du `<head>` de `index.html` (canonical, OG, Twitter et JSON-LD) ;

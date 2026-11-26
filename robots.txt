@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # Remplacer l'hôte ci-dessous par le domaine de production.
-Sitemap: https://gitatlas.netlify.app/sitemap.xml
+Sitemap: https://gitatlas-explorer.netlify.app/sitemap.xml

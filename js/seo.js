@@ -4,7 +4,7 @@ import { esc } from "./utils.js";
 
 /* ⚠️ SEULE valeur à remplacer avant la mise en ligne (avec le bloc statique
    équivalent dans index.html, lu par les crawlers qui n'exécutent pas JS). */
-export const SITE_URL = "https://gitatlas.netlify.app";
+export const SITE_URL = "https://gitatlas-explorer.netlify.app";
 
 const BASE = SITE_URL.replace(/\/+$/, "");
 const ROOT = BASE + "/";

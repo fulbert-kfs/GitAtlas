@@ -392,7 +392,7 @@
   }
 
   // js/seo.js
-  var SITE_URL = "https://gitatlas.netlify.app";
+  var SITE_URL = "https://gitatlas-explorer.netlify.app";
   var BASE = SITE_URL.replace(/\/+$/, "");
   var ROOT = BASE + "/";
   var IMAGE = BASE + "/assets/og-cover.png";
