@@ -2370,7 +2370,9 @@ main {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   overflow-x: auto;
+  overflow-y: hidden;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 
 .tabs::-webkit-scrollbar {
@@ -2380,6 +2382,7 @@ main {
 .tab {
   position: relative;
   display: flex;
+  flex: 0 0 auto;
   align-items: center;
   gap: 8px;
   font-size: 13.5px;
@@ -4277,30 +4280,6 @@ footer a:hover {
 
   .hero {
     padding-top: calc(var(--hdr) + 20px);
-  }
-}
-
-/* Les quatre onglets d'un dépôt ne tiennent pas sur une ligne sous 520 px :
-   ils passent sur deux rangées plutôt que de se chevaucher dans une barre
-   scrollable. */
-@media (max-width: 520px) {
-  html {
-    scroll-padding-top: calc(var(--hdr) + 96px);
-  }
-
-  .tabs {
-    flex-wrap: wrap;
-    overflow: visible;
-  }
-
-  .tab {
-    flex: 0 0 auto;
-    min-height: 44px;
-    padding: 13px 14px;
-  }
-
-  .tree-pane {
-    top: calc(var(--hdr) + 96px);
   }
 }
 
