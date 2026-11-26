@@ -11,3 +11,7 @@
     X-Frame-Options = "DENY"
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    # Sans 'unsafe-inline' dans script-src, le script injecté par Netlify pour
+    # le badge « Powered by Netlify » ne s'exécute pas (effet de bord documenté).
+    # Les styles inline du site restent autorisés via style-src.
+    Content-Security-Policy = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' https: data:; connect-src 'self' https:; font-src 'self' data:; object-src 'none'; frame-src 'none'; base-uri 'self'; form-action 'self'"
