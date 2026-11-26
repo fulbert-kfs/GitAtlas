@@ -1806,58 +1806,9 @@
     return out;
   }
 
-  // js/modal.js
-  function lockBody(on) {
-    S.lockCount = Math.max(0, S.lockCount + (on ? 1 : -1));
-    document.body.classList.toggle("lock", S.lockCount > 0);
-  }
-  function openDrawer() {
-    S.lastFocus = document.activeElement;
-    renderFavDrawer();
-    $("drawer").classList.add("open");
-    $("dwScrim").classList.add("show");
-    lockBody(true);
-    $("dwClose").focus();
-  }
-  function closeDrawer() {
-    if (!$("drawer").classList.contains("open")) return;
-    $("drawer").classList.remove("open");
-    $("dwScrim").classList.remove("show");
-    lockBody(false);
-    if (S.lastFocus) S.lastFocus.focus();
-  }
-  function openModal() {
-    S.lastFocus = document.activeElement;
-    const gl = currentPlatform() === "gitlab";
-    const name = gl ? "GitLab" : "GitHub";
-    $("tokenModal").dataset.pl = gl ? "gitlab" : "github";
-    $("tokenModal").setAttribute("aria-label", "Jeton d'acc\xE8s " + name);
-    $("mdTitle").textContent = name;
-    $("mdDesc").innerHTML = gl ? "Ajoutez un <b>jeton personnel GitLab</b> (scope <b>read_api</b>) pour voir vos projets priv\xE9s depuis votre profil." : "Ajoutez un jeton personnel pour voir <b>vos d\xE9p\xF4ts priv\xE9s</b> et portez la limite de l'API GitHub de 60 \xE0 5 000 requ\xEAtes/heure.";
-    $("mdHost").textContent = gl ? "gitlab.com/api/v4" : "api.github.com";
-    $("tokenInput").placeholder = gl ? "glpat-\u2026" : "github_pat_\u2026 ou ghp_\u2026";
-    $("tokenInput").setAttribute("aria-label", "Jeton " + name);
-    $("mdLink").href = gl ? "https://gitlab.com/-/user_settings/personal_access_tokens" : "https://github.com/settings/tokens?type=beta";
-    $("mdLinkTxt").textContent = "Cr\xE9er un jeton sur " + name;
-    $("mdScopes").innerHTML = gl ? "GitLab : cochez le scope <b>read_api</b>. Le jeton reste sur cet appareil." : "GitHub : scope <b>repo</b> (classique) ou <b>Contents: read</b> (jeton affin\xE9).";
-    $("tokenInput").value = S.tokens[gl ? "gitlab" : "github"] || "";
-    $("tokMemory").checked = !tokenPersisted(gl ? "gitlab" : "github");
-    $("tokClear").style.display = hasToken(gl ? "gitlab" : "github") ? "" : "none";
-    $("tokenModal").classList.add("open");
-    $("mdScrim").classList.add("show");
-    lockBody(true);
-    setTimeout(() => $("tokenInput").focus(), 80);
-  }
-  function closeModal() {
-    if (!$("tokenModal").classList.contains("open")) return;
-    $("tokenModal").classList.remove("open");
-    $("mdScrim").classList.remove("show");
-    lockBody(false);
-    if (S.lastFocus) S.lastFocus.focus();
-  }
-
   // js/menu.js
   var lastFocus = null;
+  var blockWheel = (e) => e.preventDefault();
   function isMenuOpen() {
     return $("hdr").classList.contains("menu-open");
   }
@@ -1868,7 +1819,7 @@
     $("menuScrim").classList.add("show");
     $("menuBtn").setAttribute("aria-expanded", "true");
     $("menuIco").innerHTML = icon("x", 18);
-    lockBody(true);
+    window.addEventListener("wheel", blockWheel, { passive: false });
     const first = $("hdrActions").querySelector("button");
     if (first) first.focus();
   }
@@ -1878,7 +1829,7 @@
     $("menuScrim").classList.remove("show");
     $("menuBtn").setAttribute("aria-expanded", "false");
     $("menuIco").innerHTML = icon("menu", 18);
-    lockBody(false);
+    window.removeEventListener("wheel", blockWheel);
     if (restoreFocus && lastFocus && document.contains(lastFocus)) lastFocus.focus();
     lastFocus = null;
   }
@@ -5096,6 +5047,56 @@
       html += '<div class="crow"><img class="cavatar" src="' + esc(c.avatar || initialsAvatar(c.author)) + '" alt=""><div class="cmain"><div class="cmsg" title="' + esc(c.msg) + '">' + esc(first) + '</div><div class="csub">' + esc(c.author) + " \xB7 " + relTime(c.date) + '</div></div><button class="sha" data-action="copy-sha" data-sha="' + esc(c.sha) + '" title="Copier le SHA">' + esc(c.sha.slice(0, 7)) + "</button>" + (c.url ? '<a class="btn-icon" href="' + esc(c.url) + '" target="_blank" rel="noopener noreferrer" aria-label="Voir le commit">' + icon("ext", 13) + "</a>" : "") + "</div>";
     }
     pane.innerHTML = html + "</div>";
+  }
+
+  // js/modal.js
+  function lockBody(on) {
+    S.lockCount = Math.max(0, S.lockCount + (on ? 1 : -1));
+    document.body.classList.toggle("lock", S.lockCount > 0);
+  }
+  function openDrawer() {
+    S.lastFocus = document.activeElement;
+    renderFavDrawer();
+    $("drawer").classList.add("open");
+    $("dwScrim").classList.add("show");
+    lockBody(true);
+    $("dwClose").focus();
+  }
+  function closeDrawer() {
+    if (!$("drawer").classList.contains("open")) return;
+    $("drawer").classList.remove("open");
+    $("dwScrim").classList.remove("show");
+    lockBody(false);
+    if (S.lastFocus) S.lastFocus.focus();
+  }
+  function openModal() {
+    S.lastFocus = document.activeElement;
+    const gl = currentPlatform() === "gitlab";
+    const name = gl ? "GitLab" : "GitHub";
+    $("tokenModal").dataset.pl = gl ? "gitlab" : "github";
+    $("tokenModal").setAttribute("aria-label", "Jeton d'acc\xE8s " + name);
+    $("mdTitle").textContent = name;
+    $("mdDesc").innerHTML = gl ? "Ajoutez un <b>jeton personnel GitLab</b> (scope <b>read_api</b>) pour voir vos projets priv\xE9s depuis votre profil." : "Ajoutez un jeton personnel pour voir <b>vos d\xE9p\xF4ts priv\xE9s</b> et portez la limite de l'API GitHub de 60 \xE0 5 000 requ\xEAtes/heure.";
+    $("mdHost").textContent = gl ? "gitlab.com/api/v4" : "api.github.com";
+    $("tokenInput").placeholder = gl ? "glpat-\u2026" : "github_pat_\u2026 ou ghp_\u2026";
+    $("tokenInput").setAttribute("aria-label", "Jeton " + name);
+    $("mdLink").href = gl ? "https://gitlab.com/-/user_settings/personal_access_tokens" : "https://github.com/settings/tokens?type=beta";
+    $("mdLinkTxt").textContent = "Cr\xE9er un jeton sur " + name;
+    $("mdScopes").innerHTML = gl ? "GitLab : cochez le scope <b>read_api</b>. Le jeton reste sur cet appareil." : "GitHub : scope <b>repo</b> (classique) ou <b>Contents: read</b> (jeton affin\xE9).";
+    $("tokenInput").value = S.tokens[gl ? "gitlab" : "github"] || "";
+    $("tokMemory").checked = !tokenPersisted(gl ? "gitlab" : "github");
+    $("tokClear").style.display = hasToken(gl ? "gitlab" : "github") ? "" : "none";
+    $("tokenModal").classList.add("open");
+    $("mdScrim").classList.add("show");
+    lockBody(true);
+    setTimeout(() => $("tokenInput").focus(), 80);
+  }
+  function closeModal() {
+    if (!$("tokenModal").classList.contains("open")) return;
+    $("tokenModal").classList.remove("open");
+    $("mdScrim").classList.remove("show");
+    lockBody(false);
+    if (S.lastFocus) S.lastFocus.focus();
   }
 
   // js/tree.js

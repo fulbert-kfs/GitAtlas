@@ -3392,6 +3392,11 @@ main {
 .menu-scrim {
   display: none;
   z-index: 49;
+  /* Simple attrape-clic : aucun voile teinté, sinon axe relève un défaut de
+     contraste sur le contenu situé derrière le menu. */
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
 }
 
 .drawer {
@@ -3951,10 +3956,12 @@ footer a:hover {
 
   header.menu-open .hdr-actions {
     display: flex;
+    overscroll-behavior: contain;
   }
 
   .menu-scrim.show {
     display: block;
+    touch-action: none;
   }
 
   .hdr-actions .rate-pill,
