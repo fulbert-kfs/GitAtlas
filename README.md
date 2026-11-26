@@ -79,6 +79,7 @@ L'interface est conçue pour fonctionner du desktop au petit écran :
 - en vue liste mobile, chaque dépôt passe sur deux rangs (nom/étoiles/favori puis langage/forks/date) au lieu de colonnes trop étroites ;
 - sur mobile, la barre des dépôts se réorganise en grille (recherche, langage/tri, types, compte/vue) dans l'ordre du balisage, avec des cibles tactiles de 44 px ;
 - les boutons grille/liste sont des carrés dont l'icône est centrée par la grille CSS, et la gouttière de la barre verticale reste réservée pour éviter tout décalage horizontal à l'ouverture d'un voile, d'un tiroir ou d'une modale ;
+- sur tablette (721–1024 px), la mise en page reste celle du desktop mais les contrôles tactiles gardent une cible de 44 px (filtres, onglets, arborescence, copie, modale) ;
 - cibles tactiles d'au moins 44 × 44 px, effets de survol réservés aux pointeurs fins et retour au `:active` sur appui ;
 - navigation clavier, focus visible, zones défilantes accessibles au clavier, annonces des notifications via une région live ;
 - respect de `prefers-reduced-motion` : les animations sont remplacées par des transitions légères ou supprimées.

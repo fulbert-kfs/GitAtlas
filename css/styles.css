@@ -3885,6 +3885,42 @@ footer a:hover {
   }
 }
 
+/* Tablettes (721–1024 px) : la mise en page reste celle du desktop, mais les
+   contrôles tactiles gardent les cibles de 44 px du mobile. */
+@media (min-width: 721px) and (max-width: 1024px) {
+  .btn-icon,
+  .hbtn,
+  .rate-pill,
+  .lang-switch button,
+  .chip,
+  .tab,
+  .seg button,
+  .btn,
+  .fav-btn,
+  .name-open,
+  .toolbar .sel,
+  .tsearch input,
+  #q,
+  #treeSearch,
+  .trow,
+  .cb-copy,
+  .modal .inp {
+    min-height: 44px;
+  }
+
+  .lang-switch button,
+  .btn-icon,
+  .fav-btn,
+  .toolbar > .seg:last-child button {
+    min-width: 44px;
+    width: 44px;
+  }
+
+  .toolbar > .seg:last-child button {
+    height: 44px;
+  }
+}
+
 /* ---------- responsive ---------- */
 @media (max-width: 1060px) {
   .charts-row {
