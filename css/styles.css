@@ -4045,8 +4045,56 @@ footer a:hover {
     align-items: flex-start;
   }
 
+  /* La barre filtre passe en grille dans l'ordre du balisage : recherche en
+     pleine largeur, langage/tri en vis-à-vis, types sur une ligne, puis le
+     compte et le sélecteur de vue. Le focus clavier suit donc le même ordre. */
   .toolbar {
     position: static;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .toolbar > .tsearch,
+  .toolbar > #typeSeg {
+    grid-column: 1 / -1;
+  }
+
+  .toolbar > #typeSeg button {
+    flex: 1;
+    justify-content: center;
+    padding-inline: 6px;
+    min-height: 44px;
+  }
+
+  .toolbar > #typeSeg,
+  .toolbar > .seg:last-child {
+    padding: 3px;
+  }
+
+  .toolbar > .rcount {
+    align-self: center;
+  }
+
+  .toolbar > .seg:last-child {
+    justify-self: end;
+  }
+
+  .toolbar > .seg:last-child button {
+    min-height: 44px;
+  }
+
+  .toolbar .sel {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    min-height: 44px;
+  }
+
+  .toolbar .tsearch {
+    min-width: 0;
+    min-height: 44px;
   }
 
   .tabs {

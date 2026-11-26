@@ -187,9 +187,6 @@ export function renderProfile() {
     "</div>" +
     "</section>" +
     '<div class="toolbar" id="toolbar">' +
-    '<span class="rcount"><b id="repoCount">' +
-    repos.length +
-    "</b> dépôts</span>" +
     '<div class="tsearch">' +
     icon("search", 14) +
     '<input id="repoFilter" placeholder="Filtrer les dépôts…" value="' +
@@ -211,6 +208,15 @@ export function renderProfile() {
       )
       .join("") +
     "</select>" +
+    '<select class="sel" id="sortSel" aria-label="Trier"><option value="stars"' +
+    (S.filters.sort === "stars" ? " selected" : "") +
+    '>Étoiles ↓</option><option value="recent"' +
+    (S.filters.sort === "recent" ? " selected" : "") +
+    '>Activité récente</option><option value="name"' +
+    (S.filters.sort === "name" ? " selected" : "") +
+    '>Nom A→Z</option><option value="created"' +
+    (S.filters.sort === "created" ? " selected" : "") +
+    ">Créés récemment</option></select>" +
     '<div class="seg seg-sm" id="typeSeg">' +
     [
       ["all", "Tous"],
@@ -230,15 +236,9 @@ export function renderProfile() {
       )
       .join("") +
     "</div>" +
-    '<select class="sel" id="sortSel" aria-label="Trier"><option value="stars"' +
-    (S.filters.sort === "stars" ? " selected" : "") +
-    '>Étoiles ↓</option><option value="recent"' +
-    (S.filters.sort === "recent" ? " selected" : "") +
-    '>Activité récente</option><option value="name"' +
-    (S.filters.sort === "name" ? " selected" : "") +
-    '>Nom A→Z</option><option value="created"' +
-    (S.filters.sort === "created" ? " selected" : "") +
-    ">Créés récemment</option></select>" +
+    '<span class="rcount"><b id="repoCount">' +
+    repos.length +
+    "</b> dépôts</span>" +
     '<div class="seg seg-sm"><button data-action="layout" data-l="grid" class="' +
     (S.filters.layout === "grid" ? "on" : "") +
     '" aria-label="Vue grille">' +

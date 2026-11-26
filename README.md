@@ -75,6 +75,7 @@ L'interface est conçue pour fonctionner du desktop au petit écran :
 
 - aucune barre de défilement horizontale de 320 à 430 px de large ;
 - sur mobile (≤ 720 px), les actions de l'en-tête (état de l'API, langues, partage, favoris, jeton) sont regroupées dans un menu hamburger : zone de clic transparente, `aria-expanded`, focus clavier, fermeture par Échap et retour automatique au bouton lors d'une navigation ;
+- sur mobile, la barre des dépôts se réorganise en grille (recherche, langage/tri, types, compte/vue) dans l'ordre du balisage, avec des cibles tactiles de 44 px ;
 - cibles tactiles d'au moins 44 × 44 px, effets de survol réservés aux pointeurs fins et retour au `:active` sur appui ;
 - navigation clavier, focus visible, zones défilantes accessibles au clavier, annonces des notifications via une région live ;
 - respect de `prefers-reduced-motion` : les animations sont remplacées par des transitions légères ou supprimées.
