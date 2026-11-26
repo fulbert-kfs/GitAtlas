@@ -4671,6 +4671,7 @@
     const on = tabs.querySelector(".tab.on");
     if (!on) return;
     ind.style.left = on.offsetLeft + "px";
+    ind.style.top = on.offsetTop + on.offsetHeight - 1 + "px";
     ind.style.width = on.offsetWidth + "px";
   }
   function fileIconName(path, type) {
@@ -5353,6 +5354,10 @@
   }
 
   // js/flows.js
+  function resetScroll() {
+    window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    $("hdr").classList.remove("scrolled");
+  }
   function stopRateTimer() {
     if (S.rateTimer) {
       clearInterval(S.rateTimer);
@@ -5385,7 +5390,7 @@
     S.errCtx = null;
     stopRateTimer();
     heroMode();
-    window.scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
+    resetScroll();
     const key = pl + ":" + login;
     const cached = S.profCache.get(key) || lsCacheGet(key);
     if (cached) {
@@ -5427,7 +5432,7 @@
     S.errCtx = null;
     stopRateTimer();
     heroMode();
-    window.scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
+    resetScroll();
     $("stage").innerHTML = skelRepo();
     try {
       let meta = S.repoCache.get(pl + ":" + full);

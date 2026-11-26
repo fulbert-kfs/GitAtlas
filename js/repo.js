@@ -210,6 +210,7 @@ export function moveTabInd() {
   const on = tabs.querySelector(".tab.on");
   if (!on) return;
   ind.style.left = on.offsetLeft + "px";
+  ind.style.top = on.offsetTop + on.offsetHeight - 1 + "px";
   ind.style.width = on.offsetWidth + "px";
 }
 export function fileIconName(path, type) {

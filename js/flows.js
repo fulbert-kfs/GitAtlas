@@ -33,6 +33,14 @@ import { skelProfile } from "./components.js";
 import { skelRepo } from "./components.js";
 
 /* ============================== FLUX & ROUTAGE ============================== */
+/* Un changement de vue doit repartir du haut immédiatement : le rendu de la
+   nouvelle page, plus courte, et l'ancrage du navigateur annulent un défilement
+   fluide et laisseraient les onglets collés sous l'en-tête. */
+function resetScroll() {
+  window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+  $("hdr").classList.remove("scrolled");
+}
+
 export function stopRateTimer() {
   if (S.rateTimer) {
     clearInterval(S.rateTimer);
@@ -68,7 +76,7 @@ export async function profileFlow(pl, login) {
   S.errCtx = null;
   stopRateTimer();
   heroMode();
-  window.scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
+  resetScroll();
   const key = pl + ":" + login;
   const cached = S.profCache.get(key) || lsCacheGet(key);
   if (cached) {
@@ -112,7 +120,7 @@ export async function repoFlow(pl, full) {
   S.errCtx = null;
   stopRateTimer();
   heroMode();
-  window.scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
+  resetScroll();
   $("stage").innerHTML = skelRepo();
   try {
     let meta = S.repoCache.get(pl + ":" + full);

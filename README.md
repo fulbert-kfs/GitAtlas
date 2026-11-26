@@ -78,6 +78,7 @@ L'interface est conçue pour fonctionner du desktop au petit écran :
 - sur mobile, la carte profil garde l'avatar à côté de l'identité (64 à 76 px) et étire ses actions en bas avec des cibles de 44 px ;
 - en vue liste mobile, chaque dépôt passe sur deux rangs (nom/étoiles/favori puis langage/forks/date) au lieu de colonnes trop étroites ;
 - sur mobile, la barre des dépôts se réorganise en grille (recherche, langage/tri, types, compte/vue) dans l'ordre du balisage, avec des cibles tactiles de 44 px ;
+- sous 520 px, les onglets d'un dépôt (Fichiers, README, Langages, Commits) passent sur deux rangées sans se chevaucher, avec un indicateur aligné sur l'onglet actif ;
 - les boutons grille/liste sont des carrés dont l'icône est centrée par la grille CSS, et la gouttière de la barre verticale reste réservée pour éviter tout décalage horizontal à l'ouverture d'un voile, d'un tiroir ou d'une modale ;
 - sur tablette (721–1024 px), la mise en page reste celle du desktop mais les contrôles tactiles gardent une cible de 44 px (filtres, onglets, arborescence, copie, modale) ;
 - cibles tactiles d'au moins 44 × 44 px, effets de survol réservés aux pointeurs fins et retour au `:active` sur appui ;
