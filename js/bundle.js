@@ -262,6 +262,7 @@
     folder: '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>',
     grid: '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
     list: '<line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>',
+    menu: '<line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>',
     code: '<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
     book: '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
     clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
@@ -1804,6 +1805,90 @@
     flush();
     return out;
   }
+
+  // js/modal.js
+  function lockBody(on) {
+    S.lockCount = Math.max(0, S.lockCount + (on ? 1 : -1));
+    document.body.classList.toggle("lock", S.lockCount > 0);
+  }
+  function openDrawer() {
+    S.lastFocus = document.activeElement;
+    renderFavDrawer();
+    $("drawer").classList.add("open");
+    $("dwScrim").classList.add("show");
+    lockBody(true);
+    $("dwClose").focus();
+  }
+  function closeDrawer() {
+    if (!$("drawer").classList.contains("open")) return;
+    $("drawer").classList.remove("open");
+    $("dwScrim").classList.remove("show");
+    lockBody(false);
+    if (S.lastFocus) S.lastFocus.focus();
+  }
+  function openModal() {
+    S.lastFocus = document.activeElement;
+    const gl = currentPlatform() === "gitlab";
+    const name = gl ? "GitLab" : "GitHub";
+    $("tokenModal").dataset.pl = gl ? "gitlab" : "github";
+    $("tokenModal").setAttribute("aria-label", "Jeton d'acc\xE8s " + name);
+    $("mdTitle").textContent = name;
+    $("mdDesc").innerHTML = gl ? "Ajoutez un <b>jeton personnel GitLab</b> (scope <b>read_api</b>) pour voir vos projets priv\xE9s depuis votre profil." : "Ajoutez un jeton personnel pour voir <b>vos d\xE9p\xF4ts priv\xE9s</b> et portez la limite de l'API GitHub de 60 \xE0 5 000 requ\xEAtes/heure.";
+    $("mdHost").textContent = gl ? "gitlab.com/api/v4" : "api.github.com";
+    $("tokenInput").placeholder = gl ? "glpat-\u2026" : "github_pat_\u2026 ou ghp_\u2026";
+    $("tokenInput").setAttribute("aria-label", "Jeton " + name);
+    $("mdLink").href = gl ? "https://gitlab.com/-/user_settings/personal_access_tokens" : "https://github.com/settings/tokens?type=beta";
+    $("mdLinkTxt").textContent = "Cr\xE9er un jeton sur " + name;
+    $("mdScopes").innerHTML = gl ? "GitLab : cochez le scope <b>read_api</b>. Le jeton reste sur cet appareil." : "GitHub : scope <b>repo</b> (classique) ou <b>Contents: read</b> (jeton affin\xE9).";
+    $("tokenInput").value = S.tokens[gl ? "gitlab" : "github"] || "";
+    $("tokMemory").checked = !tokenPersisted(gl ? "gitlab" : "github");
+    $("tokClear").style.display = hasToken(gl ? "gitlab" : "github") ? "" : "none";
+    $("tokenModal").classList.add("open");
+    $("mdScrim").classList.add("show");
+    lockBody(true);
+    setTimeout(() => $("tokenInput").focus(), 80);
+  }
+  function closeModal() {
+    if (!$("tokenModal").classList.contains("open")) return;
+    $("tokenModal").classList.remove("open");
+    $("mdScrim").classList.remove("show");
+    lockBody(false);
+    if (S.lastFocus) S.lastFocus.focus();
+  }
+
+  // js/menu.js
+  var lastFocus = null;
+  function isMenuOpen() {
+    return $("hdr").classList.contains("menu-open");
+  }
+  function openMenu() {
+    if (isMenuOpen()) return;
+    lastFocus = document.activeElement;
+    $("hdr").classList.add("menu-open");
+    $("menuScrim").classList.add("show");
+    $("menuBtn").setAttribute("aria-expanded", "true");
+    $("menuIco").innerHTML = icon("x", 18);
+    lockBody(true);
+    const first = $("hdrActions").querySelector("button");
+    if (first) first.focus();
+  }
+  function closeMenu(restoreFocus = false) {
+    if (!isMenuOpen()) return;
+    $("hdr").classList.remove("menu-open");
+    $("menuScrim").classList.remove("show");
+    $("menuBtn").setAttribute("aria-expanded", "false");
+    $("menuIco").innerHTML = icon("menu", 18);
+    lockBody(false);
+    if (restoreFocus && lastFocus && document.contains(lastFocus)) lastFocus.focus();
+    lastFocus = null;
+  }
+  function toggleMenu() {
+    if (isMenuOpen()) closeMenu(true);
+    else openMenu();
+  }
+  window.addEventListener("resize", () => {
+    if (innerWidth > 720 && isMenuOpen()) closeMenu(false);
+  });
 
   // js/demo-data.js
   function raw(strings, ...values) {
@@ -5013,56 +5098,6 @@
     pane.innerHTML = html + "</div>";
   }
 
-  // js/modal.js
-  function lockBody(on) {
-    S.lockCount = Math.max(0, S.lockCount + (on ? 1 : -1));
-    document.body.classList.toggle("lock", S.lockCount > 0);
-  }
-  function openDrawer() {
-    S.lastFocus = document.activeElement;
-    renderFavDrawer();
-    $("drawer").classList.add("open");
-    $("dwScrim").classList.add("show");
-    lockBody(true);
-    $("dwClose").focus();
-  }
-  function closeDrawer() {
-    if (!$("drawer").classList.contains("open")) return;
-    $("drawer").classList.remove("open");
-    $("dwScrim").classList.remove("show");
-    lockBody(false);
-    if (S.lastFocus) S.lastFocus.focus();
-  }
-  function openModal() {
-    S.lastFocus = document.activeElement;
-    const gl = currentPlatform() === "gitlab";
-    const name = gl ? "GitLab" : "GitHub";
-    $("tokenModal").dataset.pl = gl ? "gitlab" : "github";
-    $("tokenModal").setAttribute("aria-label", "Jeton d'acc\xE8s " + name);
-    $("mdTitle").textContent = name;
-    $("mdDesc").innerHTML = gl ? "Ajoutez un <b>jeton personnel GitLab</b> (scope <b>read_api</b>) pour voir vos projets priv\xE9s depuis votre profil." : "Ajoutez un jeton personnel pour voir <b>vos d\xE9p\xF4ts priv\xE9s</b> et portez la limite de l'API GitHub de 60 \xE0 5 000 requ\xEAtes/heure.";
-    $("mdHost").textContent = gl ? "gitlab.com/api/v4" : "api.github.com";
-    $("tokenInput").placeholder = gl ? "glpat-\u2026" : "github_pat_\u2026 ou ghp_\u2026";
-    $("tokenInput").setAttribute("aria-label", "Jeton " + name);
-    $("mdLink").href = gl ? "https://gitlab.com/-/user_settings/personal_access_tokens" : "https://github.com/settings/tokens?type=beta";
-    $("mdLinkTxt").textContent = "Cr\xE9er un jeton sur " + name;
-    $("mdScopes").innerHTML = gl ? "GitLab : cochez le scope <b>read_api</b>. Le jeton reste sur cet appareil." : "GitHub : scope <b>repo</b> (classique) ou <b>Contents: read</b> (jeton affin\xE9).";
-    $("tokenInput").value = S.tokens[gl ? "gitlab" : "github"] || "";
-    $("tokMemory").checked = !tokenPersisted(gl ? "gitlab" : "github");
-    $("tokClear").style.display = hasToken(gl ? "gitlab" : "github") ? "" : "none";
-    $("tokenModal").classList.add("open");
-    $("mdScrim").classList.add("show");
-    lockBody(true);
-    setTimeout(() => $("tokenInput").focus(), 80);
-  }
-  function closeModal() {
-    if (!$("tokenModal").classList.contains("open")) return;
-    $("tokenModal").classList.remove("open");
-    $("mdScrim").classList.remove("show");
-    lockBody(false);
-    if (S.lastFocus) S.lastFocus.focus();
-  }
-
   // js/tree.js
   function buildTree(entries) {
     const root = { name: "", path: "", type: "tree", children: [], count: 0 };
@@ -5631,6 +5666,7 @@
     const a = el.dataset.action;
     switch (a) {
       case "brand":
+        closeMenu(true);
         S.userNav = false;
         navigate("#/", false);
         break;
@@ -5640,6 +5676,7 @@
         $("q").focus();
         break;
       case "chip": {
+        closeMenu(true);
         const p = el.dataset.p, l = el.dataset.login;
         if (p !== "demo" && p !== S.platform) {
           S.platform = p;
@@ -5656,10 +5693,12 @@
         toast("info", "Recherches r\xE9centes effac\xE9es.");
         break;
       case "focus-search":
+        closeMenu(true);
         window.scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
         setTimeout(() => $("q").focus(), REDUCED ? 0 : 350);
         break;
       case "switch-platform": {
+        closeMenu(true);
         const other = S.platform === "github" ? "gitlab" : "github";
         S.platform = other;
         renderPlatSeg();
@@ -5668,11 +5707,13 @@
         break;
       }
       case "go-repo":
+        closeMenu(true);
         navigate(
           "#/r/" + el.dataset.pl + "/" + el.dataset.full.split("/").map(encodeURIComponent).join("/")
         );
         break;
       case "go-profile":
+        closeMenu(true);
         navigate(
           "#/u/" + el.dataset.pl + "/" + encodeURIComponent(el.dataset.login)
         );
@@ -5690,6 +5731,7 @@
         break;
       case "fav-go":
         closeDrawer();
+        closeMenu(true);
         if (el.dataset.kind === "profile")
           navigate(
             "#/u/" + el.dataset.pl + "/" + encodeURIComponent(el.dataset.id)
@@ -5698,6 +5740,12 @@
           navigate(
             "#/r/" + el.dataset.pl + "/" + el.dataset.id.split("/").map(encodeURIComponent).join("/")
           );
+        break;
+      case "menu-toggle":
+        toggleMenu();
+        break;
+      case "menu-close":
+        closeMenu(true);
         break;
       case "open-favs":
         openDrawer();
@@ -5766,7 +5814,10 @@
       }
       case "share-repo":
       case "share-open":
-        openShare(el);
+        if (isMenuOpen() && $("hdrActions").contains(el)) {
+          closeMenu();
+          openShare($("menuBtn"));
+        } else openShare(el);
         break;
       case "share-close":
         closeShare();
@@ -6074,7 +6125,8 @@
     if (e.key === "Escape") {
       if (isShareOpen()) closeShare(true);
       else if ($("tokenModal").classList.contains("open")) closeModal();
-      else closeDrawer();
+      else if ($("drawer").classList.contains("open")) closeDrawer();
+      else if (isMenuOpen()) closeMenu(true);
       return;
     }
     const typing = /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName) || e.target.isContentEditable;
@@ -6110,6 +6162,7 @@
   window.addEventListener("resize", () => {
     if (S.view === "repo") moveTabInd();
   });
+  window.addEventListener("hashchange", () => closeMenu());
   window.addEventListener("hashchange", route);
 
   // js/hero-graph.js
@@ -6154,6 +6207,7 @@
     $("keyIco").innerHTML = icon("key", 15);
     $("dwStar").innerHTML = icon("star", 17);
     $("dwClose").innerHTML = icon("x", 15);
+    $("menuIco").innerHTML = icon("menu", 18);
     $("mdKey").innerHTML = icon("key", 18);
     $("mdShield").innerHTML = icon("shield", 15);
     $("mdExt").innerHTML = icon("ext", 11);
