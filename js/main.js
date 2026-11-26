@@ -20,6 +20,7 @@ export function init() {
   $("keyIco").innerHTML = icon("key", 15);
   $("dwStar").innerHTML = icon("star", 17);
   $("dwClose").innerHTML = icon("x", 15);
+  $("menuIco").innerHTML = icon("menu", 18);
   $("mdKey").innerHTML = icon("key", 18);
   $("mdShield").innerHTML = icon("shield", 15);
   $("mdExt").innerHTML = icon("ext", 11);

@@ -6,6 +6,7 @@ import { isShareOpen } from "./share.js";
 import { nativeShare } from "./share.js";
 import { openShare } from "./share.js";
 import { MD_CODES } from "./markdown.js";
+import { closeMenu, isMenuOpen, toggleMenu } from "./menu.js";
 import { REDUCED } from "./utils.js";
 import { S } from "./state.js";
 import { TOAST_ACT } from "./ui.js";
@@ -84,6 +85,7 @@ document.addEventListener("click", async (e) => {
   const a = el.dataset.action;
   switch (a) {
     case "brand":
+      closeMenu(true);
       S.userNav = false;
       navigate("#/", false);
       break;
@@ -93,6 +95,7 @@ document.addEventListener("click", async (e) => {
       $("q").focus();
       break;
     case "chip": {
+      closeMenu(true);
       const p = el.dataset.p,
         l = el.dataset.login;
       if (p !== "demo" && p !== S.platform) {
@@ -110,10 +113,12 @@ document.addEventListener("click", async (e) => {
       toast("info", "Recherches récentes effacées.");
       break;
     case "focus-search":
+      closeMenu(true);
       window.scrollTo({ top: 0, behavior: REDUCED ? "auto" : "smooth" });
       setTimeout(() => $("q").focus(), REDUCED ? 0 : 350);
       break;
     case "switch-platform": {
+      closeMenu(true);
       const other = S.platform === "github" ? "gitlab" : "github";
       S.platform = other;
       renderPlatSeg();
@@ -122,6 +127,7 @@ document.addEventListener("click", async (e) => {
       break;
     }
     case "go-repo":
+      closeMenu(true);
       navigate(
         "#/r/" +
           el.dataset.pl +
@@ -130,6 +136,7 @@ document.addEventListener("click", async (e) => {
       );
       break;
     case "go-profile":
+      closeMenu(true);
       navigate(
         "#/u/" + el.dataset.pl + "/" + encodeURIComponent(el.dataset.login),
       );
@@ -147,6 +154,7 @@ document.addEventListener("click", async (e) => {
       break;
     case "fav-go":
       closeDrawer();
+      closeMenu(true);
       if (el.dataset.kind === "profile")
         navigate(
           "#/u/" + el.dataset.pl + "/" + encodeURIComponent(el.dataset.id),
@@ -158,6 +166,12 @@ document.addEventListener("click", async (e) => {
             "/" +
             el.dataset.id.split("/").map(encodeURIComponent).join("/"),
         );
+      break;
+    case "menu-toggle":
+      toggleMenu();
+      break;
+    case "menu-close":
+      closeMenu(true);
       break;
     case "open-favs":
       openDrawer();
@@ -232,7 +246,12 @@ document.addEventListener("click", async (e) => {
     }
     case "share-repo":
     case "share-open":
-      openShare(el);
+      // Depuis le panneau mobile, on libère le menu et on ancre le menu de
+      // partage au hamburger resté visible dans l'en-tête.
+      if (isMenuOpen() && $("hdrActions").contains(el)) {
+        closeMenu();
+        openShare($("menuBtn"));
+      } else openShare(el);
       break;
     case "share-close":
       closeShare();
@@ -552,7 +571,8 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     if (isShareOpen()) closeShare(true);
     else if ($("tokenModal").classList.contains("open")) closeModal();
-    else closeDrawer();
+    else if ($("drawer").classList.contains("open")) closeDrawer();
+    else if (isMenuOpen()) closeMenu(true);
     return;
   }
   const typing =
@@ -594,4 +614,5 @@ window.addEventListener(
 window.addEventListener("resize", () => {
   if (S.view === "repo") moveTabInd();
 });
+window.addEventListener("hashchange", () => closeMenu());
 window.addEventListener("hashchange", route);
