@@ -74,6 +74,7 @@ Les données enregistrées sous les anciennes clés `gitscope:*` sont migrées a
 L'interface est conçue pour fonctionner du desktop au petit écran :
 
 - aucune barre de défilement horizontale de 320 à 430 px de large ;
+- sur mobile (≤ 720 px), les actions de l'en-tête (état de l'API, langues, partage, favoris, jeton) sont regroupées dans un menu hamburger : voile cliquable, `aria-expanded`, focus clavier, fermeture par Échap et retour automatique au bouton lors d'une navigation ;
 - cibles tactiles d'au moins 44 × 44 px, effets de survol réservés aux pointeurs fins et retour au `:active` sur appui ;
 - navigation clavier, focus visible, zones défilantes accessibles au clavier, annonces des notifications via une région live ;
 - respect de `prefers-reduced-motion` : les animations sont remplacées par des transitions légères ou supprimées.
@@ -112,6 +113,7 @@ GitAtlas est une application statique : une seule page, un routeur par fragment 
 - `js/profile.js`, `js/repo.js`, `js/components.js` : rendu des vues et des composants.
 - `js/tree.js`, `js/markdown.js`, `js/highlight.js`, `js/languages.js`, `js/charts.js` : affichage des fichiers, du Markdown, de la coloration et des graphiques.
 - `js/search.js`, `js/modal.js`, `js/ui.js`, `js/rate.js` : recherche, modale, favoris, notifications et état de l'API.
+- `js/menu.js` : menu hamburger mobile (voile, focus, `aria-expanded`, fermeture au resize desktop).
 - `js/i18n.js` : dictionnaire FR/EN et traduction du DOM après rendu.
 - `js/seo.js`, `js/share.js` : métadonnées dynamiques et menu de partage.
 - `js/effects.js`, `js/hero-graph.js` : animations et visuel d'accueil.
@@ -137,6 +139,7 @@ gitscope/
 │   ├── charts.js           # graphiques
 │   ├── search.js           # recherche et suggestions
 │   ├── modal.js            # modale et tiroir
+│   ├── menu.js             # menu hamburger mobile
 │   ├── ui.js               # favoris, récents, toasts
 │   ├── rate.js             # état de l'API
 │   ├── i18n.js             # interface FR / EN
