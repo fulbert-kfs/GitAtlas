@@ -149,13 +149,6 @@
           >
             <span id="shareIco"></span><span class="lbl">Partager</span>
           </button>
-          <div
-            class="share-menu"
-            id="shareMenu"
-            role="group"
-            aria-label="Partager GitAtlas"
-            hidden
-          ></div>
         </div>
         <button class="hbtn" data-action="open-favs" aria-label="Favoris">
           <span id="favIco"></span><span class="lbl">Favoris</span
@@ -176,6 +169,15 @@
       id="menuScrim"
       data-action="menu-close"
       aria-hidden="true"
+    ></div>
+    <!-- Positionné en fixed : il doit rester visible même quand le panneau du
+         menu mobile (qui contient le bouton Partager) est refermé. -->
+    <div
+      class="share-menu"
+      id="shareMenu"
+      role="group"
+      aria-label="Partager GitAtlas"
+      hidden
     ></div>
     <section class="hero" id="hero" aria-label="Recherche GitAtlas">
       <div class="hero-head">

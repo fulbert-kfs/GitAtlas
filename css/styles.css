@@ -339,7 +339,9 @@ header.scrolled {
 
 /* Le bouton hamburger n'apparaît que sur mobile ; sur desktop, les actions
    restent alignées dans l'en-tête sans changement de balisage. */
-.menu-toggle {
+/* `.hbtn` définit display:flex plus bas : la sélectivité `header` évite
+   qu'il écrase la règle desktop qui masque le hamburger. */
+header .menu-toggle {
   display: none;
   width: 44px;
   height: 44px;
@@ -3925,7 +3927,7 @@ footer a:hover {
 
   /* Le panneau réutilise les contrôles de l'en-tête : ils gardent leurs IDs,
      leurs data-action et leurs traductions, mais passent en liste verticale. */
-  .menu-toggle {
+  header .menu-toggle {
     display: flex;
   }
 
@@ -3957,6 +3959,7 @@ footer a:hover {
 
   .hdr-actions .rate-pill,
   .hdr-actions .hbtn {
+    display: flex;
     width: 100%;
     justify-content: flex-start;
     padding: 10px 14px;
