@@ -47,5 +47,5 @@ export function toggleMenu() {
 // Sur desktop, le panneau redevient une simple barre d'actions : on retire
 // le voile même si le menu a été ouvert avant la rotation.
 window.addEventListener("resize", () => {
-  if (innerWidth > 720 && isMenuOpen()) closeMenu(false);
+  if (innerWidth > 1024 && isMenuOpen()) closeMenu(false);
 });

@@ -341,8 +341,8 @@ header.scrolled {
   flex: 1;
 }
 
-/* Le bouton hamburger n'apparaît que sur mobile ; sur desktop, les actions
-   restent alignées dans l'en-tête sans changement de balisage. */
+/* Le bouton hamburger apparaît sur mobile et tablette ; sur desktop, les
+   actions restent alignées dans l'en-tête sans changement de balisage. */
 /* `.hbtn` définit display:flex plus bas : la sélectivité `header` évite
    qu'il écrase la règle desktop qui masque le hamburger. */
 header .menu-toggle {
@@ -3980,7 +3980,9 @@ footer a:hover {
   }
 }
 
-@media (max-width: 720px) {
+/* Mobile et tablette (≤ 1024 px) : les actions de l'en-tête se replient dans
+   le panneau hamburger. Le balisage reste unique et le desktop garde sa barre. */
+@media (max-width: 1024px) {
   /* L'en-tête reste une seule ligne : on compacte les espacements plutôt
      que de laisser le dernier bouton sortir de l'écran. */
   header {
@@ -4065,7 +4067,18 @@ footer a:hover {
   .rate-pill .lbl {
     display: none;
   }
+}
 
+/* Sur tablette, le panneau reste étroit et ancré à droite au lieu d'occuper
+   toute la largeur comme sur téléphone. */
+@media (min-width: 721px) and (max-width: 1024px) {
+  .hdr-actions {
+    left: auto;
+    width: min(360px, calc(100vw - 20px));
+  }
+}
+
+@media (max-width: 720px) {
   .stats-row {
     grid-template-columns: 1fr 1fr;
   }

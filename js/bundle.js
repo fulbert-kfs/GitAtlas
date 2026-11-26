@@ -1838,7 +1838,7 @@
     else openMenu();
   }
   window.addEventListener("resize", () => {
-    if (innerWidth > 720 && isMenuOpen()) closeMenu(false);
+    if (innerWidth > 1024 && isMenuOpen()) closeMenu(false);
   });
 
   // js/demo-data.js
