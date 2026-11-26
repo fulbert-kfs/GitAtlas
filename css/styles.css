@@ -4040,9 +4040,60 @@ footer a:hover {
     width: 100%;
   }
 
+  /* L'avatar reste à côté de l'identité : empilé, il coûte plus de 100 px de
+     haut et repousse les actions hors du premier écran. On le réduit plutôt
+     que de perdre la lecture d'un coup d'œil. */
+  .pcard {
+    gap: 16px;
+    padding: 16px;
+    border-radius: 16px;
+  }
+
   .pmain {
-    flex-direction: column;
+    flex-direction: row;
     align-items: flex-start;
+    gap: 14px;
+  }
+
+  .avatar-ring {
+    width: 76px;
+    height: 76px;
+    border-radius: 22px;
+  }
+
+  .pavatar {
+    border-radius: 19px;
+  }
+
+  .pinfo {
+    flex: 1;
+  }
+
+  .pbio {
+    font-size: 13px;
+  }
+
+  .pmeta {
+    gap: 6px 12px;
+    margin-top: 8px;
+    font-size: 12px;
+  }
+
+  .pside {
+    gap: 12px;
+  }
+
+  .pfollow {
+    gap: 18px;
+  }
+
+  .pactions .btn {
+    min-height: 44px;
+  }
+
+  .pactions .fav-btn {
+    width: 44px;
+    height: 44px;
   }
 
   /* La barre filtre passe en grille dans l'ordre du balisage : recherche en
@@ -4118,7 +4169,18 @@ footer a:hover {
 
   .pside {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+  }
+
+  .pfollow {
+    width: 100%;
+    border-top: 1px solid var(--line);
+    padding-top: 12px;
+  }
+
+  .pactions .btn {
+    flex: 1;
+    justify-content: center;
   }
 
   .rh-stats .pill {
@@ -4138,6 +4200,32 @@ footer a:hover {
   header {
     gap: 6px;
     padding-inline: 10px;
+  }
+
+  .pmain {
+    gap: 10px;
+  }
+
+  .avatar-ring {
+    width: 64px;
+    height: 64px;
+    border-radius: 19px;
+  }
+
+  .pavatar {
+    border-radius: 16px;
+  }
+
+  .pname {
+    font-size: 1.05rem;
+  }
+
+  .pname-row {
+    gap: 6px;
+  }
+
+  .plogin {
+    font-size: 12px;
   }
 
   .rate-pill {
