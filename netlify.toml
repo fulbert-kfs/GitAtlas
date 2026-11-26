@@ -1,0 +1,13 @@
+# GitAtlas est un site statique : index.html charge directement css/styles.css
+# et js/bundle.js, donc aucune commande de build n'est nécessaire.
+[build]
+  publish = "."
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    X-Frame-Options = "DENY"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"

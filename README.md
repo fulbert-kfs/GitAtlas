@@ -181,6 +181,10 @@ gitscope/
 | `npx esbuild js/main.js --bundle --format=iife --target=es2020 --outfile=js/bundle.js` | Régénérer le bundle après une modification JS |
 | commande `chromium --headless …` ci-dessus | Régénérer `assets/og-cover.png` |
 
+## Déploiement Netlify
+
+Le dépôt contient un `netlify.toml` : la racine est publiée directement, sans commande de build. Importez `fulbert-kfs/GitAtlas` dans Netlify et lancez le déploiement ; les en-têtes de sécurité du fichier de configuration sont appliqués automatiquement. Le routage par fragment (`#/...`) ne nécessite aucune réécriture d'URL.
+
 ## Modifier le projet
 
 Les sources sont dans `js/`. `index.html` charge `js/bundle.js` : modifier un module source sans régénérer le bundle n'a aucun effet visible. Après chaque modification JS :
